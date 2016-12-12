@@ -24,7 +24,7 @@ PT_LINK=https://github.com/broadinstitute/picard/releases/download/1.131/picard-
 VV_LINK=https://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
 
 # Execution parameters
-CORES=16
+CORES=8
 THREADS=4
 NC_PROCESS=$(CORES)
 NP_PROCESS=$(shell expr $(CORES) / $(THREADS))
