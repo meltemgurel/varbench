@@ -11,7 +11,7 @@ Requirements:
 Usage:
 
   snakemake \
-  	--snakefile varbench.snakefile \
+  	--snakefile Snakefile \
   	--configfile config.yml
 '''
 
