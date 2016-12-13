@@ -1,0 +1,11 @@
+# Path to the reference genome.
+REFERENCE: 'data/ref/GRCh38.primary_assembly.genome.fa'
+
+# Path to the sample reads.
+SAMPLE: 'data/reads.fastq'
+
+# Directory where intermediate files will be written.
+OUT_DIR: 'output'
+
+# Number of cores to run on
+CORES: 8
