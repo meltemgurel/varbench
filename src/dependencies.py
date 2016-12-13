@@ -78,3 +78,16 @@ def check_bamsurgeon():
 
 def check_python():
     return sys.hexversion >= 0x20702f0
+
+# Check for dependencies
+if not check_python(): sys.exit('Dependency problem: python >= 2.7.2 is required')
+if not check_bwa(): sys.exit('Dependency problem: bwa >= 0.7.12 not found')
+if not check_samtools(): sys.exit('Dependency problem: samtools >= 1.2 not found')
+if not check_bcftools(): sys.exit('Dependency problem: bcftools >= 1.2 not found')
+if not check_wgsim(): sys.exit('Dependency problem: wgsim not found')
+if not check_velvet(): sys.exit('Dependency problem: velvet >= 1.2 not found')
+if not check_exonerate():
+    url="https://github.com/adamewing/exonerate.git"
+    os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; autoreconf -i;"
+    " ./configure && make && make check && make install")
+if not check_bamsurgeon(): sys.exit('Dependency problem: bamsurgeon not found')

@@ -5,11 +5,9 @@ write smth about the pipeline here.. what it does etc.
 -----------------------------------------------------------------------
 
 Requirements:
-
   See environment.yml
 
 Usage:
-
   snakemake \
   	--snakefile Snakefile \
   	--configfile config.yml
@@ -18,10 +16,11 @@ Usage:
 import json
 import sys
 import subprocess
+import wget
 from os.path import join, basename, dirname
 from setuptools import setup, find_packages
-from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 
+#check for dependencies
 include: "src/dependencies.py"
 
 #------------------------------------------------------------------------------
@@ -32,92 +31,90 @@ include: "src/dependencies.py"
 configfile: 'config.yml'
 
 # Path to the reference genome.
-REFERENCE = config['REFERENCE']
-
-#FTP connection
-FTP = FTPRemoteProvider()
-
-# Link to default reference genome
-REFLINK = config['REFLINK']
+REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You must provide a reference file')
 
 # Path to the sample reads.
 SAMPLE = config['SAMPLE'] if config['SAMPLE'] else sys.exit('ERROR: You must provide a sample file')
 
 # Directory where intermediate files will be written.
-OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else '.'
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'output/'
 
 # For now threads, will scale to cores
-THREADS = config['CORES'] if config['CORES'] else 4
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------ Init-
-#------------------------------------------------------------------------------
-
-# Check for dependencies
-if not check_python(): sys.exit('Dependency problem: python >= 2.7.2 is required')
-if not check_bwa(): sys.exit('Dependency problem: bwa >= 0.7.12 not found')
-if not check_samtools(): sys.exit('Dependency problem: samtools >= 1.2 not found')
-if not check_bcftools(): sys.exit('Dependency problem: bcftools >= 1.2 not found')
-if not check_wgsim(): sys.exit('Dependency problem: wgsim not found')
-if not check_velvet(): sys.exit('Dependency problem: velvet >= 1.2 not found')
-if not check_exonerate():
-    url="https://github.com/adamewing/exonerate.git"
-    os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; autoreconf -i;"
-    " ./configure && make && make check && make install")
-if not check_bamsurgeon(): sys.exit('Dependency problem: bamsurgeon not found')
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 4
 
 #------------------------------------------------------------------------------
 #----------------------------------------------------------------------- Rules-
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-#
 # Step 1. Set-up: set up environment
 #
 # TODO: add the final rule
-#
 #------------------------------------------------------------------------------
 
-#rule all:
-#    input:
-#        "report.html"
+def get_name(x):
+    return basename(os.path.splitext(x)[0])
 
-#------------------------------------------------------------------------------
-#
-# Step 2. Alignment: Align the SAMPLE to the REFERENCE using BWA
-#
-#------------------------------------------------------------------------------
-
-# Yes I could skip this intermediate step but I need the index file downstream
-rule bwa_index:
-    """bwa index a reference"""
+rule all:
     input:
-        ref = REFERENCE if REFERENCE else FTP.remote(REFLINK)
-    output:
-        'reference.bwt'
-    message: "Creating an index file for {input}."
-    shell: "bwa index {input.ref}"
+        "report.txt"
+
+#------------------------------------------------------------------------------
+# Step 2. Alignment: Align the SAMPLE to the REFERENCE and sort
+#------------------------------------------------------------------------------
 
 # Align the sample to reference genome
-rule bwa_mem:
+rule bwa_map:
     """Run bwa mem"""
-    params:
-        index = 'reference.bwt'
     input:
-        read1 = SAMPLE
+        reference = REFERENCE,
+        reads = SAMPLE
     output:
-        bam = "sample.aligned.bam"
+        temp(join(OUT_DIR, "{prefix}.aligned.bam"))
+    params:
+        rg="@RG\tID:"+get_name(SAMPLE)+"\tSM:"+get_name(SAMPLE),
+        tc=8
     log:
-        log = "bwa.alignment.log"
-    threads:
-        THREADS
+        join(OUT_DIR, "logs/bwa_map/"+get_name(SAMPLE)+".log")
     message:
-        "Running alignment with {threads} threads on {input.read1}."
-    shell:
-        "bwa mem -t {threads} {params.index} " + \
-        "{input.read1} | " + \
-        " samtools view -Sb - > {output.bam}"
+        "Running alignment with {params.tc} threads on {input.reads}."
+    run:
+        #create reference index if it doesn't exist
+        if not os.path.isfile(input.reference+'.bwt'):
+            shell("bwa index "+input.reference)
+        #run bwa mem to align the reads
+        shell("(bwa mem -R '{params.rg}' -t {params.tc} {input} | "
+              "samtools view -Sb - > {output}) 2> {log}")
 
+# Sort the aligned reads
+rule samtools_sort:
+    input:
+        join(OUT_DIR, "{prefix}.aligned.bam")
+    output:
+        protected(join(OUT_DIR, "{prefix}.sorted.bam"))
+    shell:
+        "samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
+        "-O bam {input} > {output}"
+
+# Index the aligned reads
+rule samtools_index:
+    input:
+        join(OUT_DIR, "{prefix}.sorted.bam")
+    output:
+        join(OUT_DIR, "{prefix}.sorted.bam.bai")
+    shell:
+        "samtools index {input}"
+
+# Temp
+rule finalize:
+    input:
+        expand(join(OUT_DIR, "{prefix}.sorted.bam.bai"), prefix=get_name(SAMPLE))
+    output:
+        "report.txt"
+    shell:
+        "echo DONE > {output}"
+
+#Get targeted regions
 
 
 #------------------------------------------------------------------------------
