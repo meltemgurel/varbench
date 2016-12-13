@@ -11,4 +11,4 @@ SAMPLE: 'data/reads.fastq'
 OUT_DIR: 'output'
 
 # Number of cores to run on
-CORES: 4
+CORES: 8
