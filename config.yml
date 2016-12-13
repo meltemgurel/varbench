@@ -1,6 +1,9 @@
 # Path to the reference genome.
 REFERENCE: 'data/ref/GRCh38.primary_assembly.genome.fa'
 
+# Link to default reference genome
+REFLINK: 'ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_25/GRCh38.primary_assembly.genome.fa.gz'
+
 # Path to the sample reads.
 SAMPLE: 'data/reads.fastq'
 
@@ -8,4 +11,4 @@ SAMPLE: 'data/reads.fastq'
 OUT_DIR: 'output'
 
 # Number of cores to run on
-CORES: 8
+CORES: 4

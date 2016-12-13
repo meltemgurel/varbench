@@ -1,5 +1,5 @@
 '''
-varbench.snakefile
+varbench pipeline
 
 write smth about the pipeline here.. what it does etc.
 -----------------------------------------------------------------------
@@ -16,64 +16,71 @@ Usage:
 '''
 
 import json
-import wget
+import sys
+import subprocess
 from os.path import join, basename, dirname
+from setuptools import setup, find_packages
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 
-# Globals ---------------------------------------------------------------------
+include: "src/dependencies.py"
 
+#------------------------------------------------------------------------------
+#--------------------------------------------------------------------- Globals-
+#------------------------------------------------------------------------------
+
+# Config
 configfile: 'config.yml'
 
 # Path to the reference genome.
 REFERENCE = config['REFERENCE']
 
+#FTP connection
+FTP = FTPRemoteProvider()
+
+# Link to default reference genome
+REFLINK = config['REFLINK']
+
 # Path to the sample reads.
-SAMPLE = config['SAMPLE']
+SAMPLE = config['SAMPLE'] if config['SAMPLE'] else sys.exit('ERROR: You must provide a sample file')
 
 # Directory where intermediate files will be written.
-OUT_DIR = config['OUT_DIR']
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else '.'
 
-# Functions -------------------------------------------------------------------
+# For now threads, will scale to cores
+THREADS = config['CORES'] if config['CORES'] else 4
 
-def get_reference():
-    url = 'ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_25/GRCh38.primary_assembly.genome.fa.gz'
-    ref = wget.download(url)
-    os.system("gunzip "+ref)
-    return ref
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------ Init-
+#------------------------------------------------------------------------------
 
-# Rules -----------------------------------------------------------------------
+# Check for dependencies
+if not check_python(): sys.exit('Dependency problem: python >= 2.7.2 is required')
+if not check_bwa(): sys.exit('Dependency problem: bwa >= 0.7.12 not found')
+if not check_samtools(): sys.exit('Dependency problem: samtools >= 1.2 not found')
+if not check_bcftools(): sys.exit('Dependency problem: bcftools >= 1.2 not found')
+if not check_wgsim(): sys.exit('Dependency problem: wgsim not found')
+if not check_velvet(): sys.exit('Dependency problem: velvet >= 1.2 not found')
+if not check_exonerate():
+    url="https://github.com/adamewing/exonerate.git"
+    os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; autoreconf -i;"
+    " ./configure && make && make check && make install")
+if not check_bamsurgeon(): sys.exit('Dependency problem: bamsurgeon not found')
+
+#------------------------------------------------------------------------------
+#----------------------------------------------------------------------- Rules-
+#------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 #
 # Step 1. Set-up: set up environment
 #
-# TODO: add package checks before installation
-#       add actual resource checks: reference + sample file
+# TODO: add the final rule
 #
 #------------------------------------------------------------------------------
 
-rule install_exonerate:
-    params:
-        url="https://github.com/adamewing/exonerate.git",
-        dir=OUT_DIR
-    log:
-        "dependencies.exonerate.log"
-    shell:
-        "git clone {params.url}; cd exonerate; git checkout v2.4.0; autoreconf -i;"
-        " ./configure && make && make check && make install"
-
-rule install_bamsurgeon:
-    params:
-        url="https://github.com/adamewing/bamsurgeon.git",
-        dir=OUT_DIR
-    log:
-        "dependencies.bamsurgeon.log"
-    shell:
-        "git clone {params.url}; cd bamsurgeon; python setup.py build; "
-        "python setup.py install"
-
-rule all:
-    input:
-        'out.txt'
+#rule all:
+#    input:
+#        "report.html"
 
 #------------------------------------------------------------------------------
 #
@@ -81,10 +88,39 @@ rule all:
 #
 #------------------------------------------------------------------------------
 
+# Yes I could skip this intermediate step but I need the index file downstream
 rule bwa_index:
     """bwa index a reference"""
     input:
-        indexref = REFERENCE if REFERENCE else get_reference()
+        ref = REFERENCE if REFERENCE else FTP.remote(REFLINK)
     output:
         'reference.bwt'
-    shell: "bwa index {input.indexref}"
+    message: "Creating an index file for {input}."
+    shell: "bwa index {input.ref}"
+
+# Align the sample to reference genome
+rule bwa_mem:
+    """Run bwa mem"""
+    params:
+        index = 'reference.bwt'
+    input:
+        read1 = SAMPLE
+    output:
+        bam = "sample.aligned.bam"
+    log:
+        log = "bwa.alignment.log"
+    threads:
+        THREADS
+    message:
+        "Running alignment with {threads} threads on {input.read1}."
+    shell:
+        "bwa mem -t {threads} {params.index} " + \
+        "{input.read1} | " + \
+        " samtools view -Sb - > {output.bam}"
+
+
+
+#------------------------------------------------------------------------------
+# notestoself;
+# benchmark:
+# "benchmarks/somecommand/{sample}.txt"
