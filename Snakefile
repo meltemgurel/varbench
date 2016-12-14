@@ -123,8 +123,6 @@ rule samtools_mpileup:
     shell:
         "samtools mpileup -f {input.reference} {input.reads} -d {params.maxdepth} | "
         "awk '$4 > {params.mindepth} {printf \"%s\t%s\t%s\t%s\n\",$1,$2,$3,$4}'"
-        "samtools mpileup -f  -d  -o {output}; "
-        "awk '{$4 > {mindepth} print $1 $2 $3}'"
 
 # Select bases to create the varfile
 rule bedtools_merge:
