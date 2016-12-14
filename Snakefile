@@ -109,16 +109,57 @@ rule samtools_index:
 # Step 2. Coverage: Identify coverage using bedtools
 #------------------------------------------------------------------------------
 
-# Generate a list of mutation locations
-rule bedtools_genomecov:
+# Identify coverage
+## Generates per-base-coverage table (chr pos base coverage)
+rule samtools_mpileup:
     input:
-        join(OUT_DIR, "{prefix}.sorted.bam")
+        reference = REFERENCE,
+        reads = join(OUT_DIR, "{prefix}.sorted.bam")
     output:
-        join(OUT_DIR, "{prefix}.regions")
+        temp(join(OUT_DIR, "{prefix}.regions"))
     params:
-        mindepth=9
+        maxdepth=10000, # At a position, read maximally INT reads per input file (default is 8000)
+        mindepth=10
     shell:
-        "bedtools genomecov -ibam {input} -bg | awk '$4 > {params.mindepth}' > {output}"
+        "samtools mpileup -f {input.reference} {input.reads} -d {params.maxdepth} | "
+        "awk '$4 > {params.mindepth} {printf \"%s\t%s\t%s\t%s\n\",$1,$2,$3,$4}'"
+        "samtools mpileup -f  -d  -o {output}; "
+        "awk '{$4 > {mindepth} print $1 $2 $3}'"
+
+# Select bases to create the varfile
+rule bedtools_merge:
+    input:
+        join(OUT_DIR, "{prefix}.regions")
+    output:
+        join(OUT_DIR, "{prefix}.varfile")
+    run:
+        R("""
+        # ...
+        data <- read.delim("Projects/varbench/d.txt", header = FALSE)
+
+        detPos <- function(df){
+          m <- c()
+          p <- df$V2[1]
+          while(is.finite(p)){
+            m <- append(m, p)
+            p <- min(df$V2[df$V2 >= p + 101])
+          }
+          return(m)
+        }
+
+        y <- by(x, x$V1, detPos)
+
+        lapply(y, function(posVec){
+          data.frame(rep(names(posVec), length()), m, m, vaf)
+        })
+
+        plot(rep(1, nrow(data))~data$V2, pch = 20)
+        points(rep(1.1, length(m))~m, pch = 20, col="red")
+
+        vaf <- (rbeta(10, 1, 5, ncp = 0)*9.9)+0.1
+        hist(vaf)
+        """)
+        ""
 
 #------------------------------------------------------------------------------
 # Step 3. Mutations: Generating the desired somatic mutations with bamsurgeon
@@ -133,11 +174,12 @@ rule bamsurgeon_addsnv:
     output:
         join(OUT_DIR, "{prefix}.mut.bam")
     params:
+        "-m 0.1 -n 10 -p 8 --mindepth --maxdepth --single --tagreads "
 
     shell:
         "awk '{$NF=""; print $0}' {input.coverregs} >  "+join(OUT_DIR, "{prefix}.varfile")
-        "addsnv.py {params} -v {input.targetbam} -f {input.targetbam} -r {input.reference}"
-        "bedtools genomecov -ibam {input} -bg | awk '$4 > {params.mindepth}' > {output}"
+        "; addsnv.py {params} -v {input.coverregs} -f {input.targetbam} -r {input.reference} "
+        "-o {output}"
 
 # Temp
 rule finalize:
