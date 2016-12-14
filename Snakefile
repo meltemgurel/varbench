@@ -47,7 +47,7 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 4
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Step 1. Set-up: set up environment
+# Step 0. Set-up: set up environment
 #
 # TODO: add the final rule
 #------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ rule all:
         "report.txt"
 
 #------------------------------------------------------------------------------
-# Step 2. Alignment: Align the SAMPLE to the REFERENCE and sort
+# Step 1. Alignment: Align the SAMPLE to the REFERENCE and sort
 #------------------------------------------------------------------------------
 
 # Align the sample to reference genome
@@ -104,6 +104,40 @@ rule samtools_index:
         join(OUT_DIR, "{prefix}.sorted.bam.bai")
     shell:
         "samtools index {input}"
+
+#------------------------------------------------------------------------------
+# Step 2. Coverage: Identify coverage using bedtools
+#------------------------------------------------------------------------------
+
+# Generate a list of mutation locations
+rule bedtools_genomecov:
+    input:
+        join(OUT_DIR, "{prefix}.sorted.bam")
+    output:
+        join(OUT_DIR, "{prefix}.regions")
+    params:
+        mindepth=9
+    shell:
+        "bedtools genomecov -ibam {input} -bg | awk '$4 > {params.mindepth}' > {output}"
+
+#------------------------------------------------------------------------------
+# Step 3. Mutations: Generating the desired somatic mutations with bamsurgeon
+#------------------------------------------------------------------------------
+
+# Generate a list of mutation locations
+rule bamsurgeon_addsnv:
+    input:
+        coverregs=join(OUT_DIR, "{prefix}.regions"),
+        targetbam=join(OUT_DIR, "{prefix}.sorted.bam"),
+        reference=REFERENCE
+    output:
+        join(OUT_DIR, "{prefix}.mut.bam")
+    params:
+
+    shell:
+        "awk '{$NF=""; print $0}' {input.coverregs} >  "+join(OUT_DIR, "{prefix}.varfile")
+        "addsnv.py {params} -v {input.targetbam} -f {input.targetbam} -r {input.reference}"
+        "bedtools genomecov -ibam {input} -bg | awk '$4 > {params.mindepth}' > {output}"
 
 # Temp
 rule finalize:
