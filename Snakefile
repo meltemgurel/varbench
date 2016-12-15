@@ -125,7 +125,7 @@ rule samtools_mpileup:
         "awk '$4 > {params.mindepth} {printf \"%s\t%s\t%s\t%s\n\",$1,$2,$3,$4}'"
 
 # Select bases to create the varfile
-rule bedtools_merge:
+rule r_create_varfile:
     input:
         join(OUT_DIR, "{prefix}.regions")
     output:
@@ -163,10 +163,10 @@ rule bedtools_merge:
 # Step 3. Mutations: Generating the desired somatic mutations with bamsurgeon
 #------------------------------------------------------------------------------
 
-# Generate a list of mutation locations
+# Generate mutated bam files
 rule bamsurgeon_addsnv:
     input:
-        coverregs=join(OUT_DIR, "{prefix}.regions"),
+        coverregs=join(OUT_DIR, "{prefix}.varfile"),
         targetbam=join(OUT_DIR, "{prefix}.sorted.bam"),
         reference=REFERENCE
     output:
@@ -175,14 +175,14 @@ rule bamsurgeon_addsnv:
         "-m 0.1 -n 10 -p 8 --mindepth --maxdepth --single --tagreads "
 
     shell:
-        "awk '{$NF=""; print $0}' {input.coverregs} >  "+join(OUT_DIR, "{prefix}.varfile")
+        "awk '{$NF=""; print $0}' {input.coverregs} >  "+join(OUT_DIR, "{prefix}.varfile") +
         "; addsnv.py {params} -v {input.coverregs} -f {input.targetbam} -r {input.reference} "
         "-o {output}"
 
 # Temp
 rule finalize:
     input:
-        expand(join(OUT_DIR, "{prefix}.sorted.bam.bai"), prefix=get_name(SAMPLE))
+        expand(join(OUT_DIR, "{prefix}.mut.bam"), prefix=get_name(SAMPLE))
     output:
         "report.txt"
     shell:
