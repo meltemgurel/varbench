@@ -20,8 +20,7 @@ import wget
 from os.path import join, basename, dirname
 from setuptools import setup, find_packages
 
-#check for dependencies
-include: "src/dependencies.py"
+include: "src/functions.py", "src/functions.R"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-
@@ -129,35 +128,40 @@ rule r_create_varfile:
     input:
         join(OUT_DIR, "{prefix}.regions")
     output:
-        join(OUT_DIR, "{prefix}.varfile")
+        varfile=join(OUT_DIR, "{prefix}.varfile"),
+        mutpos=join(OUT_DIR, "{prefix}.mutations.pos.png"),
+        mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.png")
     run:
         R("""
-        # ...
-        data <- read.delim("Projects/varbench/d.txt", header = FALSE)
+        #section1-create and save the varfile
+        data <- read.delim("{input}", header = FALSE)
+        colnames(data) <- c('chr', 'pos', 'nuc', 'cov')
+        data$mut <- 0
 
-        detPos <- function(df){
-          m <- c()
-          p <- df$V2[1]
-          while(is.finite(p)){
-            m <- append(m, p)
-            p <- min(df$V2[df$V2 >= p + 101])
-          }
-          return(m)
-        }
+        pos <- melt(sapply(tapply(data$pos, data$chr, poss), function(m) m))[,2:3]
+        vaf <- (rbeta(nrow(pos), 1, 5, ncp = 0)*9.9)+0.1
+        pos$vaf <- round(vaf, 3)
 
-        y <- by(x, x$V1, detPos)
+        write.table(x = pos, file = "{output.varfile}", quote = FALSE, sep = '\t',
+                    row.names = FALSE, col.names = FALSE, dec = '.')
 
-        lapply(y, function(posVec){
-          data.frame(rep(names(posVec), length()), m, m, vaf)
-        })
+        #section2-create and save plots for reporting
+        colnames(pos) <- c('chr', 'pos')
+        keys <- colnames(pos)
 
-        plot(rep(1, nrow(data))~data$V2, pch = 20)
-        points(rep(1.1, length(m))~m, pch = 20, col="red")
+        tData <- data.table(data, key=keys)
+        tMutd <- data.table(pos, key=keys)
 
-        vaf <- (rbeta(10, 1, 5, ncp = 0)*9.9)+0.1
-        hist(vaf)
+        tData[tMutd, mut := 1L]
+        tData$mut <- as.factor(tData$mut)
+
+        p <- ggplot(tData, aes(pos, mut))
+        p + geom_point(aes(colour = mut)) + facet_wrap(~chr)
+        ggsave(file="{output.mutpos}")
+
+        ggplot(pos, aes(vaf)) + geom_histogram(binwidth = 0.1)
+        ggsave(file="{output.mutfreq}")
         """)
-        ""
 
 #------------------------------------------------------------------------------
 # Step 3. Mutations: Generating the desired somatic mutations with bamsurgeon
@@ -182,7 +186,9 @@ rule bamsurgeon_addsnv:
 # Temp
 rule finalize:
     input:
-        expand(join(OUT_DIR, "{prefix}.mut.bam"), prefix=get_name(SAMPLE))
+        expand(join(OUT_DIR, "{prefix}.mut.bam"), prefix=get_name(SAMPLE)),
+        expand(join(OUT_DIR, "{prefix}.mutations.pos.png"), prefix=get_name(SAMPLE)),
+        expand(join(OUT_DIR, "{prefix}.mutations.freq.png"), prefix=get_name(SAMPLE))
     output:
         "report.txt"
     shell:
