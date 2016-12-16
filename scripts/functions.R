@@ -1,4 +1,6 @@
 library(data.table)
+library(reshape2)
+library(ggplot2)
 poss <- function(v){
       m <- c()
       p <- v[1]
