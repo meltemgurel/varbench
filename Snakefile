@@ -19,8 +19,9 @@ import subprocess
 import wget
 from os.path import join, basename, dirname
 from setuptools import setup, find_packages
+from snakemake.utils import R
 
-include: "src/functions.py", "src/functions.R"
+include: "scripts/functions.py"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-
@@ -33,7 +34,9 @@ configfile: 'config.yml'
 REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You must provide a reference file')
 
 # Path to the sample reads.
-SAMPLE = config['SAMPLE'] if config['SAMPLE'] else sys.exit('ERROR: You must provide a sample file')
+SAMPLE1 = config['SAMPLE1'] if config['SAMPLE1'] else sys.exit('ERROR: You must provide a sample file')
+SAMPLE2 = config['SAMPLE2'] if config['SAMPLE2'] else sys.exit('ERROR: You must provide a sample file')
+SAMPLE = SAMPLE1
 
 # Directory where intermediate files will be written.
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'output/'
@@ -66,23 +69,24 @@ rule all:
 rule bwa_map:
     """Run bwa mem"""
     input:
-        reference = REFERENCE,
-        reads = SAMPLE
+        reference=REFERENCE,
+        read1=SAMPLE1,
+        read2=SAMPLE2
     output:
         temp(join(OUT_DIR, "{prefix}.aligned.bam"))
     params:
         rg="@RG\tID:"+get_name(SAMPLE)+"\tSM:"+get_name(SAMPLE),
         tc=8
     log:
-        join(OUT_DIR, "logs/bwa_map/"+get_name(SAMPLE)+".log")
+        join(OUT_DIR, "logs/bwa_map."+get_name(SAMPLE)+".log")
     message:
-        "Running alignment with {params.tc} threads on {input.reads}."
+        "Running alignment with {params.tc} threads on {input.read1} and {input.read2}."
     run:
         #create reference index if it doesn't exist
         if not os.path.isfile(input.reference+'.bwt'):
             shell("bwa index "+input.reference)
         #run bwa mem to align the reads
-        shell("(bwa mem -R '{params.rg}' -t {params.tc} {input} | "
+        shell("(bwa mem -R '{params.rg}' -t {params.tc} {input.reference} {input.read1} {input.read2} | "
               "samtools view -Sb - > {output}) 2> {log}")
 
 # Sort the aligned reads
@@ -91,9 +95,11 @@ rule samtools_sort:
         join(OUT_DIR, "{prefix}.aligned.bam")
     output:
         protected(join(OUT_DIR, "{prefix}.sorted.bam"))
+    log:
+        join(OUT_DIR, "logs/samtools_sort."+get_name(SAMPLE)+".log")
     shell:
-        "samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
-        "-O bam {input} > {output}"
+        "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
+        "-O bam {input} > {output}) 2> {log}"
 
 # Index the aligned reads
 rule samtools_index:
@@ -101,8 +107,10 @@ rule samtools_index:
         join(OUT_DIR, "{prefix}.sorted.bam")
     output:
         join(OUT_DIR, "{prefix}.sorted.bam.bai")
+    log:
+        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".log")
     shell:
-        "samtools index {input}"
+        "(samtools index {input}) 2> {log}"
 
 #------------------------------------------------------------------------------
 # Step 2. Coverage: Identify coverage using bedtools
@@ -112,16 +120,26 @@ rule samtools_index:
 ## Generates per-base-coverage table (chr pos base coverage)
 rule samtools_mpileup:
     input:
-        reference = REFERENCE,
-        reads = join(OUT_DIR, "{prefix}.sorted.bam")
+        reference=REFERENCE,
+        reads=join(OUT_DIR, "{prefix}.sorted.bam"),
+        readsi=join(OUT_DIR, "{prefix}.sorted.bam.bai")
     output:
-        temp(join(OUT_DIR, "{prefix}.regions"))
+        join(OUT_DIR, "{prefix}.regions")
     params:
         maxdepth=10000, # At a position, read maximally INT reads per input file (default is 8000)
         mindepth=10
+    log:
+        join(OUT_DIR, "logs/samtools_mpileup."+get_name(SAMPLE)+".log")
     shell:
-        "samtools mpileup -f {input.reference} {input.reads} -d {params.maxdepth} | "
-        "awk '$4 > {params.mindepth} {printf \"%s\t%s\t%s\t%s\n\",$1,$2,$3,$4}'"
+        "(samtools mpileup -f {input.reference} {input.reads} -d {params.maxdepth} | "
+        "awk '$4 > {params.mindepth} {{printf \"%s\\t%s\\t%s\\t%s\\n\",$1,$2,$3,$4}}' "
+        "> {output}) 2> {log}"
+
+#------------------------------------------------------------------------------
+# Step 3. Mutations: Generating the desired somatic mutations
+#
+# TODO: check R libs, silence warnings
+#------------------------------------------------------------------------------
 
 # Select bases to create the varfile
 rule r_create_varfile:
@@ -129,59 +147,66 @@ rule r_create_varfile:
         join(OUT_DIR, "{prefix}.regions")
     output:
         varfile=join(OUT_DIR, "{prefix}.varfile"),
+        alleles=join(OUT_DIR, "{prefix}.alleles"),
         mutpos=join(OUT_DIR, "{prefix}.mutations.pos.png"),
         mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.png")
     run:
         R("""
+        source("scripts/functions.R")
         #section1-create and save the varfile
-        data <- read.delim("{input}", header = FALSE)
-        colnames(data) <- c('chr', 'pos', 'nuc', 'cov')
+        data <- droplevels(subset(read.delim("{input}", header = FALSE,
+                           col.names = c('chr', 'pos', 'nuc', 'cov')),
+                           cov >= mean(cov)))
         data$mut <- 0
 
-        pos <- melt(sapply(tapply(data$pos, data$chr, poss), function(m) m))[,2:3]
-        vaf <- (rbeta(nrow(pos), 1, 5, ncp = 0)*9.9)+0.1
-        pos$vaf <- round(vaf, 3)
+        muts <- melt(sapply(tapply(data$pos, data$chr, poss), function(m) m))[,2:3]
+        colnames(muts) <- keys <- c('chr', 'pos')
+        muts$pos2 <- muts$pos
+        muts$vaf <- round(((rbeta(nrow(muts), 1, 5, ncp = 0)*9.9)+0.1)/100, 3)
 
-        write.table(x = pos, file = "{output.varfile}", quote = FALSE, sep = '\t',
+        write.table(x = muts, file = "{output.varfile}", quote = FALSE, sep = '\t',
                     row.names = FALSE, col.names = FALSE, dec = '.')
 
         #section2-create and save plots for reporting
-        colnames(pos) <- c('chr', 'pos')
-        keys <- colnames(pos)
-
         tData <- data.table(data, key=keys)
-        tMutd <- data.table(pos, key=keys)
-
+        tMutd <- data.table(muts, key=keys)
         tData[tMutd, mut := 1L]
-        tData$mut <- as.factor(tData$mut)
 
-        p <- ggplot(tData, aes(pos, mut))
-        p + geom_point(aes(colour = mut)) + facet_wrap(~chr)
+        p <- ggplot(tData, aes(pos, as.factor(mut)))
+        p + geom_point(aes(colour = as.factor(mut))) + facet_wrap(~chr)
         ggsave(file="{output.mutpos}")
 
-        ggplot(pos, aes(vaf)) + geom_histogram(binwidth = 0.1)
+        ggplot(muts, aes(vaf)) + geom_histogram(binwidth = 0.005)
         ggsave(file="{output.mutfreq}")
+
+        #section3-create and save the region info for checksum
+        tData[tData$mut > 0, mut := muts$vaf]
+        write.table(x = tData[mut > 0], file = "{output.alleles}", quote = FALSE, sep = '\t',
+                    row.names = FALSE, col.names = FALSE, dec = '.')
+
         """)
 
 #------------------------------------------------------------------------------
-# Step 3. Mutations: Generating the desired somatic mutations with bamsurgeon
+# Step 4. Mutations: Introducing somatic mutations in the original BAM file
 #------------------------------------------------------------------------------
 
 # Generate mutated bam files
 rule bamsurgeon_addsnv:
     input:
-        coverregs=join(OUT_DIR, "{prefix}.varfile"),
+        varfile=join(OUT_DIR, "{prefix}.varfile"),
         targetbam=join(OUT_DIR, "{prefix}.sorted.bam"),
+        targetbami=join(OUT_DIR, "{prefix}.sorted.bam.bai"),
         reference=REFERENCE
     output:
         join(OUT_DIR, "{prefix}.mut.bam")
     params:
-        "-m 0.1 -n 10 -p 8 --mindepth --maxdepth --single --tagreads "
-
+        "-p 8 --mindepth 10 --maxdepth 10000 --ignoresnps --force --tagreads "
+        "--tmpdir "+join(OUT_DIR, "addsnv")
+    log:
+        join(OUT_DIR, "logs/bamsurgeon_addsnv."+get_name(SAMPLE)+".log")
     shell:
-        "awk '{$NF=""; print $0}' {input.coverregs} >  "+join(OUT_DIR, "{prefix}.varfile") +
-        "; addsnv.py {params} -v {input.coverregs} -f {input.targetbam} -r {input.reference} "
-        "-o {output}"
+        "(addsnv.py {params} -v {input.varfile} -f {input.targetbam} -r {input.reference} "
+        "-o {output}) 2> {log}"
 
 # Temp
 rule finalize:
