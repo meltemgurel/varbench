@@ -3,17 +3,17 @@ library(reshape2)
 library(ggplot2)
 
 poss <- function(v){
-      m <- c()
-      p <- v[1]
-      while(is.finite(p)){
-        m <- append(m, p)
-        p <- min(v[v >= p + 101])
-      }
-      return(m)
-    }
+  m <- c()
+  p <- v[1]
+  while(is.finite(p)){
+    m <- append(m, p)
+    p <- min(v[v >= p + 101])
+  }
+  return(m)
+}
 
 args = commandArgs(trailingOnly=TRUE)
-
+args
 #section1-create and save the varfile
 data <- droplevels(subset(read.delim(args[1], header = FALSE,
                    col.names = c('chr', 'pos', 'nuc', 'cov')),

@@ -151,7 +151,8 @@ rule r_create_varfile:
         mutposs=join(OUT_DIR, "{prefix}.mutations.pos.png"),
         mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.png")
     shell:
-        "Rscript r_create_varfile.R --vanilla {input} {output}"
+        "Rscript --vanilla scripts/r_create_varfile.R {input} {output.varfile} "
+        "{output.mutposs} {output.mutfreq} {output.alleles}"
 
 #------------------------------------------------------------------------------
 # Step 4. Mutations: Introducing somatic mutations in the original BAM file
