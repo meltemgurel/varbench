@@ -3,8 +3,6 @@ library(reshape2)
 library(ggplot2)
 library(Cairo)
 
-.libPaths() 
-
 poss <- function(v){
   m <- c()
   p <- v[1]
@@ -16,7 +14,6 @@ poss <- function(v){
 }
 
 args = commandArgs(trailingOnly=TRUE)
-args
 #section1-create and save the varfile
 data <- droplevels(subset(read.delim(args[1], header = FALSE,
                    col.names = c('chr', 'pos', 'nuc', 'cov')),
