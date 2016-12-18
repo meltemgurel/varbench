@@ -1,6 +1,7 @@
 library(data.table)
 library(reshape2)
 library(ggplot2)
+library(Cairo)
 
 poss <- function(v){
   m <- c()
@@ -35,10 +36,10 @@ tData[tMutd, mut := 1L]
 
 p <- ggplot(tData, aes(pos, as.factor(mut)))
 p + geom_point(aes(colour = as.factor(mut))) + facet_wrap(~chr)
-ggsave(file=args[3])
+ggsave(file=args[3], type = "cairo-png")
 
 ggplot(muts, aes(vaf)) + geom_histogram(binwidth = 0.005)
-ggsave(file=args[4])
+ggsave(file=args[4], type = "cairo-png")
 
 #section3-create and save the region info for checksum
 tData[tData$mut > 0, mut := muts$vaf]
