@@ -87,7 +87,7 @@ rule bwa_map:
             shell("bwa index "+input.reference)
         #run bwa mem to align the reads
         shell("(bwa mem -R '{params.rg}' -t {params.tc} {input.reference} {input.read1} {input.read2} | "
-              "samtools view -Sb - > {output}) 2> {log}")
+              "samtools view -Sb -F 2308 - > {output}) 2> {log}")
 
 # Sort the aligned reads
 rule samtools_sort:
