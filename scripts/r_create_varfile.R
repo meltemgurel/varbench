@@ -3,6 +3,8 @@ library(reshape2)
 library(ggplot2)
 library(Cairo)
 
+.libPaths() 
+
 poss <- function(v){
   m <- c()
   p <- v[1]
