@@ -168,7 +168,7 @@ rule bamsurgeon_addsnv:
     output:
         join(OUT_DIR, "{prefix}.mut.bam")
     params:
-        "-p 8 --mindepth 10 --maxdepth 10000 --ignoresnps --force --tagreads "
+        "-p 128 --mindepth 10 --maxdepth 10000 --ignoresnps --force --tagreads "
         "--tmpdir "+join(OUT_DIR, "addsnv")
     log:
         join(OUT_DIR, "logs/bamsurgeon_addsnv."+get_name(SAMPLE)+".log")
