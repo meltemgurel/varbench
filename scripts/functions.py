@@ -26,10 +26,7 @@ def check_bcftools():
     for line in p.stderr:
         sline = line.decode("utf-8")
         if sline.startswith('Version:'):
-            major, minor = sline.strip().splidata = list(csv.reader(open('text.txt', 'rb'), delimiter='\t'))
-
-print get_af(bam="output/SLX-10378.s_1.r_1.sorted.bam", chr="chr17", pos=7669585)
-print get_af(bam="output/SLX-10378.s_1.r_1.sorted.bam", chr="chr17", pos=7675966)t()[1].split('.')[:2]
+            major, minor = sline.strip().split()[1].split('.')[:2]
             minor = minor.split('-')[0]
             if int(major) >= 1 and int(minor) >= 2:
                 return True
