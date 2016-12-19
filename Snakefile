@@ -17,6 +17,8 @@ import json
 import sys
 import subprocess
 import wget
+import pysam
+import pandas
 from os.path import join, basename, dirname
 from setuptools import setup, find_packages
 from snakemake.utils import R
@@ -54,8 +56,8 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 4
 # TODO: add the final rule
 #------------------------------------------------------------------------------
 
-def get_name(x):
-    return basename(os.path.splitext(x)[0])
+# Check for dependencies
+setup()
 
 rule all:
     input:
@@ -87,7 +89,7 @@ rule bwa_map:
             shell("bwa index "+input.reference)
         #run bwa mem to align the reads
         shell("(bwa mem -R '{params.rg}' -t {params.tc} {input.reference} {input.read1} {input.read2} | "
-              "samtools view -Sb -F 2308 - > {output}) 2> {log}")
+              "samtools view -Sb -F 3844 - > {output}) 2> {log}")
 
 # Sort the aligned reads
 rule samtools_sort:
@@ -176,10 +178,26 @@ rule bamsurgeon_addsnv:
         "(addsnv.py {params} -v {input.varfile} -f {input.targetbam} -r {input.reference} "
         "-o {output}) 2> {log}"
 
+#------------------------------------------------------------------------------
+# Step 5. Checksum: Calculating the allele frequency of the induced mutations
+#------------------------------------------------------------------------------
+
+# Calculate the actual allele frequencies for each position in *.alleles
+rule py_allele_freq_cal:
+    input:
+        alleles=join(OUT_DIR, "{prefix}.alleles"),
+        modified=join(OUT_DIR, "{prefix}.mut.bam")
+    output:
+        join(OUT_DIR, "{prefix}.mutations")
+    run:
+        df = pandas.DataFrame.from_csv(input.alleles, sep='\t', index_col=False)
+        for index, row in df.iterrows():
+            print get_af(bam="output/SLX-10378.s_1.r_1.sorted.bam", chr=row[0], pos=row[1])
+
 # Temp
 rule finalize:
     input:
-        expand(join(OUT_DIR, "{prefix}.mut.bam"), prefix=get_name(SAMPLE)),
+        expand(join(OUT_DIR, "{prefix}.mutations"), prefix=get_name(SAMPLE)),
         expand(join(OUT_DIR, "{prefix}.mutations.pos.png"), prefix=get_name(SAMPLE)),
         expand(join(OUT_DIR, "{prefix}.mutations.freq.png"), prefix=get_name(SAMPLE))
     output:
