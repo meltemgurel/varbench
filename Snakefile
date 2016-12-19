@@ -191,10 +191,10 @@ rule py_allele_freq_cal:
     output:
         join(OUT_DIR, "{prefix}.mutations")
     run:
-        df = pandas.DataFrame.from_csv(input.alleles, sep='\t', index_col=False)
+        df = pandas.DataFrame.from_csv(input.alleles, sep='\t', index_col=None)
         for index, row in df.iterrows():
-            print get_af(bam=input.original, chr=row[0], pos=row[1])
-            print get_af(bam=input.modified, chr=row[0], pos=row[1])
+            print get_af(bam=input.original, chr=str(row[0]), pos=int(row[1]))
+            print get_af(bam=input.modified, chr=str(row[0]), pos=int(row[1]))
 
 # Temp
 rule finalize:
