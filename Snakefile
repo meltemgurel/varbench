@@ -108,7 +108,7 @@ rule samtools_index:
     output:
         join(OUT_DIR, "{prefix}.sorted.bam.bai")
     log:
-        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".log")
+        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".sorted.log")
     shell:
         "(samtools index {input}) 2> {log}"
 
@@ -124,7 +124,7 @@ rule samtools_mpileup:
         reads=join(OUT_DIR, "{prefix}.sorted.bam"),
         readsi=join(OUT_DIR, "{prefix}.sorted.bam.bai")
     output:
-        join(OUT_DIR, "{prefix}.regions")
+        temp(join(OUT_DIR, "{prefix}.regions"))
     params:
         maxdepth=10000, # At a position, read maximally INT reads per input file (default is 8000)
         mindepth=10
@@ -176,6 +176,17 @@ rule bamsurgeon_addsnv:
         "(addsnv.py {params} -v {input.varfile} -f {input.targetbam} -r {input.reference} "
         "-o {output}) 2> {log}"
 
+# Index the mutated reads
+rule samtools_index:
+    input:
+        join(OUT_DIR, "{prefix}.mut.bam")
+    output:
+        join(OUT_DIR, "{prefix}.mut.bam.bai")
+    log:
+        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".mut.log")
+    shell:
+        "(samtools index {input}) 2> {log}"
+
 #------------------------------------------------------------------------------
 # Step 5. Checksum: Calculating the allele frequency of the induced mutations
 #------------------------------------------------------------------------------
@@ -185,7 +196,8 @@ rule py_allele_freq_cal:
     input:
         alleles=join(OUT_DIR, "{prefix}.alleles"),
         original=join(OUT_DIR, "{prefix}.sorted.bam"),
-        modified=join(OUT_DIR, "{prefix}.mut.bam")
+        modified=join(OUT_DIR, "{prefix}.mut.bam"),
+        modifiedi=join(OUT_DIR, "{prefix}.mut.bam.bai"),
     output:
         join(OUT_DIR, "{prefix}.mutations")
     shell:
