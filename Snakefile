@@ -186,13 +186,15 @@ rule bamsurgeon_addsnv:
 rule py_allele_freq_cal:
     input:
         alleles=join(OUT_DIR, "{prefix}.alleles"),
+        original=join(OUT_DIR, "{prefix}.sorted.bam"),
         modified=join(OUT_DIR, "{prefix}.mut.bam")
     output:
         join(OUT_DIR, "{prefix}.mutations")
     run:
         df = pandas.DataFrame.from_csv(input.alleles, sep='\t', index_col=False)
         for index, row in df.iterrows():
-            print get_af(bam="output/SLX-10378.s_1.r_1.sorted.bam", chr=row[0], pos=row[1])
+            print get_af(bam=input.original, chr=row[0], pos=row[1])
+            print get_af(bam=input.modified, chr=row[0], pos=row[1])
 
 # Temp
 rule finalize:
