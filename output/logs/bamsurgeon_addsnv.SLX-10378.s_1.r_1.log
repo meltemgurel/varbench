@@ -1,0 +1,803 @@
+WARN	2016-12-19 15:33:14.096379	haplo_chr17_7669585_7669586	could not pileup for region: chr17:7669582
+WARN	2016-12-19 15:33:14.110037	haplo_chr17_7670586_7670587	could not pileup for region: chr17:7670583
+WARN	2016-12-19 15:33:14.140619	haplo_chr17_7670687_7670688	could not pileup for region: chr17:7670583
+WARN	2016-12-19 15:33:14.210098	haplo_chr17_7673572_7673573	could not pileup for region: chr17:7673468
+WARN	2016-12-19 15:33:14.238255	haplo_chr17_7673471_7673472	could not pileup for region: chr17:7673468
+WARN	2016-12-19 15:33:14.259798	haplo_chr17_7673678_7673679	could not pileup for region: chr17:7673671
+WARN	2016-12-19 15:33:14.259812	haplo_chr17_7673779_7673780	could not pileup for region: chr17:7673671
+WARN	2016-12-19 15:33:14.388821	haplo_chr17_7674116_7674117	could not pileup for region: chr17:7674113
+WARN	2016-12-19 15:33:14.549503	haplo_chr17_7674802_7674803	could not pileup for region: chr17:7674799
+WARN	2016-12-19 15:33:14.718042	haplo_chr17_7675126_7675127	could not pileup for region: chr17:7675022
+WARN	2016-12-19 15:33:14.801732	haplo_chr17_7676498_7676499	could not pileup for region: chr17:7676495
+WARN	2016-12-19 15:33:14.826248	haplo_chr17_7675025_7675026	could not pileup for region: chr17:7675022
+WARN	2016-12-19 15:33:14.905575	haplo_chr17_7676599_7676600	could not pileup for region: chr17:7676495
+WARN	2016-12-19 15:33:14.913777	haplo_chr17_7675966_7675967	could not pileup for region: chr17:7675960
+WARN	2016-12-19 15:33:15.016923	haplo_chr17_7676372_7676373	could not pileup for region: chr17:7676357
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 5.43 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9971 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam
+[main] Real time: 31.693 sec; CPU: 29.323 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 6.03 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9990 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam
+[main] Real time: 36.241 sec; CPU: 28.130 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+4.30 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9971 sequences have been processed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam
+[main] Real time: 6.996 sec; CPU: 6.071 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (129, 129, 129)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.06 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.05 sec
+[bwa_sai2sam_pe_core] print alignments... 0.05 sec
+[bwa_sai2sam_pe_core] 9971 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam.1.sai output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam.2.sai output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam output/addsnv/haplo_chr17_7669585_7669585.tmpbam.db45ab5e-9cfd-4dc7-bb98-1c77ea375b5b.bam
+[main] Real time: 4.187 sec; CPU: 3.602 sec
+5.20 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9990 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam
+[main] Real time: 9.003 sec; CPU: 7.168 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (129, 129, 129)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.05 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.06 sec
+[bwa_sai2sam_pe_core] print alignments... 0.03 sec
+[bwa_sai2sam_pe_core] 9990 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam.1.sai output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam.2.sai output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam output/addsnv/haplo_chr17_7669686_7669686.tmpbam.8bce550e-88eb-48e3-a3d4-4c6c14617c51.bam
+[main] Real time: 4.946 sec; CPU: 3.991 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 218.49 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9931 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam
+[main] Real time: 250.633 sec; CPU: 231.118 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 220.38 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9968 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam
+[main] Real time: 245.793 sec; CPU: 227.998 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 76.81 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9931 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam
+[main] Real time: 79.701 sec; CPU: 78.507 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (134, 173, 174)
+[infer_isize] low and high boundaries: 125 and 254 for estimating avg and std
+[infer_isize] inferred external isize from 87 pairs: 153.667 +/- 20.059
+[infer_isize] skewness: 0.022; kurtosis: -1.998; ap_prior: 1.00e-05
+[infer_isize] inferred maximum insert size: 295 (7.05 sigma)
+[bwa_sai2sam_pe_core] time elapses: 0.01 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_paired_sw] 2 out of 6242 Q17 singletons are mated.
+[bwa_paired_sw] 0 out of 46 Q17 discordant pairs are fixed.
+[bwa_sai2sam_pe_core] time elapses: 0.05 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.01 sec
+[bwa_sai2sam_pe_core] print alignments... 0.03 sec
+[bwa_sai2sam_pe_core] 9931 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam.1.sai output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam.2.sai output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam output/addsnv/haplo_chr17_7670586_7670586.tmpbam.320f3f4f-df37-4a91-83e8-167167242776.bam
+[main] Real time: 3.520 sec; CPU: 3.379 sec
+87.66 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9968 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam
+[main] Real time: 103.061 sec; CPU: 89.723 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (134, 173, 174)
+[infer_isize] low and high boundaries: 125 and 254 for estimating avg and std
+[infer_isize] inferred external isize from 87 pairs: 153.667 +/- 20.059
+[infer_isize] skewness: 0.022; kurtosis: -1.998; ap_prior: 1.00e-05
+[infer_isize] inferred maximum insert size: 295 (7.05 sigma)
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_paired_sw] 2 out of 6252 Q17 singletons are mated.
+[bwa_paired_sw] 0 out of 46 Q17 discordant pairs are fixed.
+[bwa_sai2sam_pe_core] time elapses: 0.06 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.02 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 9968 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam.1.sai output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam.2.sai output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam output/addsnv/haplo_chr17_7670687_7670687.tmpbam.bf2cb907-18f1-4cf5-9836-f813f4aa313b.bam
+[main] Real time: 19.444 sec; CPU: 17.669 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+WARN	2016-12-19 15:47:50.559898	chr17_7673572_7673572_0.027_None	depth at site is greater than cutoff, aborting mutation.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 2.40 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9948 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam
+[main] Real time: 27.179 sec; CPU: 26.933 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 3.81 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9948 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam
+[main] Real time: 30.094 sec; CPU: 30.078 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (129, 129, 129)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.01 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.04 sec
+[bwa_sai2sam_pe_core] print alignments... 0.05 sec
+[bwa_sai2sam_pe_core] 9948 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam.1.sai output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam.2.sai output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam output/addsnv/haplo_chr17_7673471_7673471.tmpbam.f7e01705-7002-48d8-836d-393b480ce8f7.bam
+[main] Real time: 59.312 sec; CPU: 59.067 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+17.38 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7120 sequences have been processed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam
+[main] Real time: 23.021 sec; CPU: 23.026 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+17.38 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7095 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam
+[main] Real time: 31.159 sec; CPU: 30.421 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 36.65 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7120 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam
+[main] Real time: 75.959 sec; CPU: 75.654 sec
+38.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7095 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam
+[main] Real time: 79.864 sec; CPU: 79.587 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (131, 131, 131)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.02 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.63 sec
+[bwa_sai2sam_pe_core] print alignments... 0.03 sec
+[bwa_sai2sam_pe_core] 7120 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam.1.sai output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam.2.sai output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam output/addsnv/haplo_chr17_7673779_7673779.tmpbam.c5f33160-4ec5-4bae-a8cb-c4e9c0e00945.bam
+[main] Real time: 67.267 sec; CPU: 66.581 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (131, 131, 131)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.03 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.60 sec
+[bwa_sai2sam_pe_core] print alignments... 0.03 sec
+[bwa_sai2sam_pe_core] 7095 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam.1.sai output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam.2.sai output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam output/addsnv/haplo_chr17_7673678_7673678.tmpbam.c1d8519d-bddd-4251-adee-177cbe9e4156.bam
+[main] Real time: 57.944 sec; CPU: 57.890 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 176.28 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8581 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam
+[main] Real time: 208.929 sec; CPU: 208.861 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 157.04 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8581 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam
+[main] Real time: 183.780 sec; CPU: 183.718 sec
+17.12 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9753 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam
+[main] Real time: 46.505 sec; CPU: 46.332 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] fail to infer insert size: too few good pairs
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 8581 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam.1.sai output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam.2.sai output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam output/addsnv/haplo_chr17_7674116_7674116.tmpbam.7d2dee4e-75c9-411b-a323-ff4c6dab678e.bam
+[main] Real time: 68.954 sec; CPU: 68.667 sec
+13.15 sec
+[bwa_aln_core] write to the disk... 0.01 sec
+[bwa_aln_core] 9753 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam
+[main] Real time: 56.698 sec; CPU: 56.636 sec
+WARN	2016-12-19 16:06:22.110510	chr17_7674344_7674344_0.02_None	depth at site is greater than cutoff, aborting mutation.
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (129, 130, 130)
+[infer_isize] low and high boundaries: 127 and 132 for estimating avg and std
+[infer_isize] inferred external isize from 9385 pairs: 129.542 +/- 0.530
+[infer_isize] skewness: -0.509; kurtosis: -0.586; ap_prior: 4.45e-05
+[infer_isize] inferred maximum insert size: 133 (7.16 sigma)
+[bwa_sai2sam_pe_core] time elapses: 0.07 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_paired_sw] 1 out of 198 Q17 singletons are mated.
+[bwa_paired_sw] 0 out of 43 Q17 discordant pairs are fixed.
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.49 sec
+[bwa_sai2sam_pe_core] print alignments... 0.06 sec
+[bwa_sai2sam_pe_core] 9753 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam.1.sai output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam.2.sai output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam output/addsnv/haplo_chr17_7674243_7674243.tmpbam.2c1642b9-0b06-4430-bd1b-b821b40c4667.bam
+[main] Real time: 63.450 sec; CPU: 63.089 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 122.75 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7802 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam
+[main] Real time: 169.545 sec; CPU: 169.569 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+56.68 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 7802 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam
+[main] Real time: 82.246 sec; CPU: 82.115 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (159, 159, 159)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.01 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 7802 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam.1.sai output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam.2.sai output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam output/addsnv/haplo_chr17_7674802_7674802.tmpbam.08a61716-73ce-4d9c-a734-474f5d1f224b.bam
+[main] Real time: 65.832 sec; CPU: 65.277 sec
+WARN	2016-12-19 16:13:03.949393	chr17_7675126_7675126_0.005_None	depth at site is greater than cutoff, aborting mutation.
+109.55 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9597 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam
+[main] Real time: 146.126 sec; CPU: 146.133 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 86.40 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 5467 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam
+[main] Real time: 130.906 sec; CPU: 130.598 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 169.76 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9597 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam
+[main] Real time: 205.502 sec; CPU: 205.573 sec
+85.22 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 5467 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam
+[main] Real time: 131.307 sec; CPU: 131.287 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (145, 157, 159)
+[infer_isize] low and high boundaries: 125 and 187 for estimating avg and std
+[infer_isize] inferred external isize from 51 pairs: 151.824 +/- 6.963
+[infer_isize] skewness: 0.043; kurtosis: -1.993; ap_prior: 1.00e-05
+[infer_isize] inferred maximum insert size: 201 (7.10 sigma)
+[bwa_sai2sam_pe_core] time elapses: 0.01 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_paired_sw] 2 out of 5 Q17 singletons are mated.
+[bwa_paired_sw] 0 out of 0 Q17 discordant pairs are fixed.
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 9597 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam.1.sai output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam.2.sai output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam output/addsnv/haplo_chr17_7674910_7674910.tmpbam.7add55a2-4f41-4e21-9a0b-8002b62d5f17.bam
+[main] Real time: 67.582 sec; CPU: 67.179 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] fail to infer insert size: too few good pairs
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.00 sec
+[bwa_sai2sam_pe_core] 5467 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam.1.sai output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam.2.sai output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam output/addsnv/haplo_chr17_7675025_7675025.tmpbam.a780bf2e-a4ae-485d-a4dc-ce8982204502.bam
+[main] Real time: 66.252 sec; CPU: 65.898 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+WARN	2016-12-19 16:21:47.943785	chr17_7676067_7676067_0.013_None	depth at site is greater than cutoff, aborting mutation.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 2.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8928 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam
+[main] Real time: 46.485 sec; CPU: 46.380 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 3.59 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8928 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam
+[main] Real time: 45.021 sec; CPU: 44.846 sec
+158.65 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9941 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam
+[main] Real time: 198.025 sec; CPU: 198.000 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (125, 125, 125)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.04 sec
+[bwa_sai2sam_pe_core] changing coordinates of 1 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.02 sec
+[bwa_sai2sam_pe_core] print alignments... 0.03 sec
+[bwa_sai2sam_pe_core] 8928 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam.1.sai output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam.2.sai output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam output/addsnv/haplo_chr17_7675966_7675966.tmpbam.85de6fc8-534e-4668-8f2f-64da6c83a057.bam
+[main] Real time: 48.696 sec; CPU: 48.614 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+176.73 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9941 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam
+[main] Real time: 207.014 sec; CPU: 206.731 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 2.80 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 5098 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam
+[main] Real time: 39.211 sec; CPU: 39.124 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 2.99 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 5098 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam
+[main] Real time: 46.489 sec; CPU: 46.260 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (175, 175, 175)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.01 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 9941 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam.1.sai output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam.2.sai output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam output/addsnv/haplo_chr17_7675227_7675227.tmpbam.24a70868-6f34-4ac8-9edb-e0d3da201c51.bam
+[main] Real time: 81.991 sec; CPU: 81.846 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (129, 129, 129)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.02 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.03 sec
+[bwa_sai2sam_pe_core] print alignments... 0.02 sec
+[bwa_sai2sam_pe_core] 5098 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam.1.sai output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam.2.sai output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam output/addsnv/haplo_chr17_7676170_7676170.tmpbam.d6cbf294-a5f6-4f93-8e68-1ffa2db8ac1f.bam
+[main] Real time: 60.445 sec; CPU: 60.108 sec
+WARN	2016-12-19 16:29:54.356845	chr17_7676271_7676271_0.035_None	depth at site is greater than cutoff, aborting mutation.
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+103.13 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9930 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam
+[main] Real time: 144.296 sec; CPU: 144.254 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+WARN	2016-12-19 16:34:49.254675	chr17_7676599_7676599_0.026_None	depth at site is greater than cutoff, aborting mutation.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... [bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 94.97 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 9930 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam
+[main] Real time: 137.298 sec; CPU: 137.257 sec
+136.51 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8893 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam.1.sai -b1 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam
+[main] Real time: 170.992 sec; CPU: 171.059 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] fail to infer insert size: too few good pairs
+[bwa_sai2sam_pe_core] time elapses: 0.01 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.01 sec
+[bwa_sai2sam_pe_core] 9930 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam.1.sai output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam.2.sai output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam output/addsnv/haplo_chr17_7676372_7676372.tmpbam.aa7422bc-baf9-4c0c-845e-5305e24b1acf.bam
+[main] Real time: 72.997 sec; CPU: 72.501 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_aln_core] calculate SA coordinate... 99.73 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 8893 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa aln -q 5 -l 32 -k 3 -t 1 -o 1 -f output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam.2.sai -b2 data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam
+[main] Real time: 141.153 sec; CPU: 140.509 sec
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_read_seq] 0.0% bases are trimmed.
+[bwa_sai2sam_pe_core] convert to sequence coordinate... 
+[infer_isize] (25, 50, 75) percentile: (166, 166, 166)
+[infer_isize] fail to infer insert size: weird pairing
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] changing coordinates of 0 alignments.
+[bwa_sai2sam_pe_core] align unmapped mate...
+[bwa_sai2sam_pe_core] time elapses: 0.00 sec
+[bwa_sai2sam_pe_core] refine gapped alignments... 0.00 sec
+[bwa_sai2sam_pe_core] print alignments... 0.02 sec
+[bwa_sai2sam_pe_core] 8893 sequences have been processed.
+[main] Version: 0.7.15-r1140
+[main] CMD: bwa sampe -P -f output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam.sam data/ref/GRCh38.primary_assembly.genome.fa output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam.1.sai output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam.2.sai output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam output/addsnv/haplo_chr17_7676498_7676498.tmpbam.a5327ff9-9d3a-4354-99ae-5fa31bee23e2.bam
+[main] Real time: 23.084 sec; CPU: 23.094 sec
