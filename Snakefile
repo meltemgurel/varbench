@@ -17,8 +17,6 @@ import json
 import sys
 import subprocess
 import wget
-import pysam
-import pandas
 from os.path import join, basename, dirname
 from setuptools import setup, find_packages
 from snakemake.utils import R
@@ -191,7 +189,7 @@ rule py_allele_freq_cal:
     output:
         join(OUT_DIR, "{prefix}.mutations")
     shell:
-        "scripts/py_allele_freq_cal.py {input.alleles} {input.original} {input.modified}"
+        "python scripts/py_allele_freq_cal.py {input.alleles} {input.original} {input.modified}"
 
 # Temp
 rule finalize:

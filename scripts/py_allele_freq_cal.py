@@ -19,8 +19,8 @@ def get_af(bam, chr, pos):
     bamFile.close()
     return baseFreq
 
-df = pandas.DataFrame.from_csv(sys.argv[0], sep='\t', index_col=None, header=None)
+df = pandas.DataFrame.from_csv(sys.argv[1], sep='\t', index_col=None, header=None)
 for index, row in df.iterrows():
-    print(get_af(bam=sys.argv[1], chr=str(row[0]), pos=int(row[1])))
     print(get_af(bam=sys.argv[2], chr=str(row[0]), pos=int(row[1])))
+    print(get_af(bam=sys.argv[3], chr=str(row[0]), pos=int(row[1])))
     print("-----------------------------------------------------------")
