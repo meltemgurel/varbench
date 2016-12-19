@@ -102,7 +102,7 @@ rule samtools_sort:
         "-O bam {input} > {output}) 2> {log}"
 
 # Index the aligned reads
-rule samtools_index:
+rule samtools_sorted_index:
     input:
         join(OUT_DIR, "{prefix}.sorted.bam")
     output:
@@ -177,7 +177,7 @@ rule bamsurgeon_addsnv:
         "-o {output}) 2> {log}"
 
 # Index the mutated reads
-rule samtools_index:
+rule samtools_mut_index:
     input:
         join(OUT_DIR, "{prefix}.mut.bam")
     output:
