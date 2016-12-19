@@ -95,20 +95,3 @@ def setup():
 
 def get_name(x):
     return basename(os.path.splitext(x)[0])
-
-def get_af(bam, chr, pos):
-    pos -= 1
-    baseFreq = {"A":0,"T":0,"C":0,"G":0}
-    bamFile = pysam.AlignmentFile(bam, 'rb')
-    for pileupcolumn in bamFile.pileup(chr, pos):
-        found = []
-        if pileupcolumn.pos == pos:
-            for pileupread in pileupcolumn.pileups:
-                if not pileupread.is_del and not pileupread.is_refskip:
-                    try:
-                        found.index(pileupread.alignment.qname)
-                    except ValueError :
-                        baseFreq[str(pileupread.alignment.seq[pileupread.query_position])] += 1
-                        found.append(pileupread.alignment.qname)
-    bamFile.close()
-    return baseFreq

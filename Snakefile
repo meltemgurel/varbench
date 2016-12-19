@@ -190,12 +190,8 @@ rule py_allele_freq_cal:
         modified=join(OUT_DIR, "{prefix}.mut.bam")
     output:
         join(OUT_DIR, "{prefix}.mutations")
-    run:
-        df = pandas.DataFrame.from_csv(input.alleles, sep='\t', index_col=None, header=None)
-        for index, row in df.iterrows():
-            print(get_af(bam=input.original, chr=str(row[0]), pos=int(row[1])))
-            print(get_af(bam=input.modified, chr=str(row[0]), pos=int(row[1])))
-            print("-----------------------------------------------------------")
+    shell:
+        "scripts/py_allele_freq_cal.py {input.alleles} {input.original} {input.modified}"
 
 # Temp
 rule finalize:
