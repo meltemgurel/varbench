@@ -90,25 +90,25 @@ rule bwa_map:
               "samtools view -Sb -F 3844 - > {output}) 2> {log}")
 
 # Sort the aligned reads
-rule samtools_sort:
+rule samtools_org_sort:
     input:
         join(OUT_DIR, "{prefix}.aligned.bam")
     output:
-        protected(join(OUT_DIR, "{prefix}.sorted.bam"))
+        protected(join(OUT_DIR, "{prefix}.org.bam"))
     log:
-        join(OUT_DIR, "logs/samtools_sort."+get_name(SAMPLE)+".log")
+        join(OUT_DIR, "logs/samtools_org_sort."+get_name(SAMPLE)+".log")
     shell:
         "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
         "-O bam {input} > {output}) 2> {log}"
 
 # Index the aligned reads
-rule samtools_sorted_index:
+rule samtools_org_index:
     input:
-        join(OUT_DIR, "{prefix}.sorted.bam")
+        join(OUT_DIR, "{prefix}.org.bam")
     output:
-        join(OUT_DIR, "{prefix}.sorted.bam.bai")
+        join(OUT_DIR, "{prefix}.org.bam.bai")
     log:
-        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".sorted.log")
+        join(OUT_DIR, "logs/samtools_org_index."+get_name(SAMPLE)+".log")
     shell:
         "(samtools index {input}) 2> {log}"
 
@@ -121,8 +121,8 @@ rule samtools_sorted_index:
 rule samtools_mpileup:
     input:
         reference=REFERENCE,
-        reads=join(OUT_DIR, "{prefix}.sorted.bam"),
-        readsi=join(OUT_DIR, "{prefix}.sorted.bam.bai")
+        reads=join(OUT_DIR, "{prefix}.org.bam"),
+        readsi=join(OUT_DIR, "{prefix}.org.bam.bai")
     output:
         temp(join(OUT_DIR, "{prefix}.regions"))
     params:
@@ -162,11 +162,11 @@ rule r_create_varfile:
 rule bamsurgeon_addsnv:
     input:
         varfile=join(OUT_DIR, "{prefix}.varfile"),
-        targetbam=join(OUT_DIR, "{prefix}.sorted.bam"),
-        targetbami=join(OUT_DIR, "{prefix}.sorted.bam.bai"),
+        targetbam=join(OUT_DIR, "{prefix}.org.bam"),
+        targetbami=join(OUT_DIR, "{prefix}.org.bam.bai"),
         reference=REFERENCE
     output:
-        join(OUT_DIR, "{prefix}.mut.bam")
+        temp(join(OUT_DIR, "{prefix}.mut.bam"))
     params:
         "-p 128 --mindepth 10 --maxdepth 10000 --ignoresnps --force --tagreads "
         "--tmpdir "+join(OUT_DIR, "addsnv")
@@ -176,14 +176,26 @@ rule bamsurgeon_addsnv:
         "(addsnv.py {params} -v {input.varfile} -f {input.targetbam} -r {input.reference} "
         "-o {output}) 2> {log}"
 
-# Index the mutated reads
-rule samtools_mut_index:
+# Sort the mutated reads
+rule samtools_mut_sort:
     input:
         join(OUT_DIR, "{prefix}.mut.bam")
     output:
-        join(OUT_DIR, "{prefix}.mut.bam.bai")
+        protected(join(OUT_DIR, "{prefix}.mutant.bam"))
     log:
-        join(OUT_DIR, "logs/samtools_index."+get_name(SAMPLE)+".mut.log")
+        join(OUT_DIR, "logs/samtools_mut_sort."+get_name(SAMPLE)+".log")
+    shell:
+        "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
+        "-O bam {input} > {output}) 2> {log}"
+
+# Index the mutated reads
+rule samtools_mut_index:
+    input:
+        join(OUT_DIR, "{prefix}.mutant.bam")
+    output:
+        join(OUT_DIR, "{prefix}.mutant.bam.bai")
+    log:
+        join(OUT_DIR, "logs/samtools_mut_index."+get_name(SAMPLE)+".log")
     shell:
         "(samtools index {input}) 2> {log}"
 
@@ -195,9 +207,9 @@ rule samtools_mut_index:
 rule py_allele_freq_cal:
     input:
         alleles=join(OUT_DIR, "{prefix}.alleles"),
-        original=join(OUT_DIR, "{prefix}.sorted.bam"),
-        modified=join(OUT_DIR, "{prefix}.mut.bam"),
-        modifiedi=join(OUT_DIR, "{prefix}.mut.bam.bai"),
+        original=join(OUT_DIR, "{prefix}.org.bam"),
+        modified=join(OUT_DIR, "{prefix}.mutant.bam"),
+        modifiedi=join(OUT_DIR, "{prefix}.mutant.bam.bai"),
     output:
         join(OUT_DIR, "{prefix}.mutations")
     shell:
