@@ -1,5 +1,5 @@
 '''
-varbench pipeline
+varbench pipeline - Simulating somatic mutations
 
 write smth about the pipeline here.. what it does etc.
 -----------------------------------------------------------------------
@@ -42,16 +42,12 @@ SAMPLE = SAMPLE1
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'output/'
 
 # For now threads, will scale to cores
-NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 4
-
-#------------------------------------------------------------------------------
-#----------------------------------------------------------------------- Rules-
-#------------------------------------------------------------------------------
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 8
 
 #------------------------------------------------------------------------------
 # Step 0. Set-up: set up environment
 #
-# TODO: add the final rule
+# TODO: update the final rule
 #------------------------------------------------------------------------------
 
 # Check for dependencies
@@ -76,7 +72,7 @@ rule bwa_map:
         temp(join(OUT_DIR, "{prefix}.aligned.bam"))
     params:
         rg="@RG\tID:"+get_name(SAMPLE)+"\tSM:"+get_name(SAMPLE),
-        tc=8
+        tc=NTHREADS
     log:
         join(OUT_DIR, "logs/bwa_map."+get_name(SAMPLE)+".log")
     message:
@@ -138,6 +134,8 @@ rule samtools_mpileup:
 #------------------------------------------------------------------------------
 # Step 3. Mutations: Generating the desired somatic mutations
 #
+# TODO: make sure the 6bp window around the nuc is covered
+# TODO: maybe specify a 6bp window and let bamsurgeon randomly choose the nuc?
 # TODO: check R libs, silence warnings
 #------------------------------------------------------------------------------
 
@@ -148,14 +146,15 @@ rule r_create_varfile:
     output:
         varfile=join(OUT_DIR, "{prefix}.varfile"),
         alleles=join(OUT_DIR, "{prefix}.alleles"),
-        mutposs=join(OUT_DIR, "{prefix}.mutations.pos.png"),
         mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.png")
     shell:
         "Rscript --vanilla scripts/r_create_varfile.R {input} {output.varfile} "
-        "{output.mutposs} {output.mutfreq} {output.alleles}"
+        "{output.alleles} {output.mutfreq}"
 
 #------------------------------------------------------------------------------
 # Step 4. Mutations: Introducing somatic mutations in the original BAM file
+#
+# TODO: {CW} depth at site is greater than cutoff, aborting mutation.
 #------------------------------------------------------------------------------
 
 # Generate mutated bam files
@@ -225,9 +224,6 @@ rule finalize:
         "report.txt"
     shell:
         "echo DONE > {output}"
-
-#Get targeted regions
-
 
 #------------------------------------------------------------------------------
 # notestoself;
