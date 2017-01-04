@@ -55,7 +55,7 @@ setup()
 
 rule all:
     input:
-        "report.txt"
+        join(OUT_DIR, "mutations.txt")
 
 #------------------------------------------------------------------------------
 # Step 1. Alignment: Align the SAMPLE to the REFERENCE and sort
@@ -90,7 +90,7 @@ rule samtools_org_sort:
     input:
         join(OUT_DIR, "{prefix}.aligned.bam")
     output:
-        protected(join(OUT_DIR, "{prefix}.org.bam"))
+        join(OUT_DIR, "{prefix}.org.bam")
     log:
         join(OUT_DIR, "logs/samtools_org_sort."+get_name(SAMPLE)+".log")
     shell:
@@ -144,8 +144,8 @@ rule r_create_varfile:
     input:
         join(OUT_DIR, "{prefix}.regions")
     output:
-        varfile=join(OUT_DIR, "{prefix}.varfile"),
-        alleles=join(OUT_DIR, "{prefix}.alleles"),
+        varfile=temp(join(OUT_DIR, "{prefix}.varfile")),
+        alleles=temp(join(OUT_DIR, "{prefix}.alleles")),
         mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.png")
     shell:
         "Rscript --vanilla scripts/r_create_varfile.R {input} {output.varfile} "
@@ -180,7 +180,7 @@ rule samtools_mut_sort:
     input:
         join(OUT_DIR, "{prefix}.mut.bam")
     output:
-        protected(join(OUT_DIR, "{prefix}.mutant.bam"))
+        join(OUT_DIR, "{prefix}.mutant.bam")
     log:
         join(OUT_DIR, "logs/samtools_mut_sort."+get_name(SAMPLE)+".log")
     shell:
@@ -206,24 +206,22 @@ rule samtools_mut_index:
 rule py_allele_freq_cal:
     input:
         alleles=join(OUT_DIR, "{prefix}.alleles"),
-        original=join(OUT_DIR, "{prefix}.org.bam"),
         modified=join(OUT_DIR, "{prefix}.mutant.bam"),
         modifiedi=join(OUT_DIR, "{prefix}.mutant.bam.bai"),
     output:
-        join(OUT_DIR, "{prefix}.mutations")
+        temp(join(OUT_DIR, "{prefix}.mutations"))
     shell:
-        "python scripts/py_allele_freq_cal.py {input.alleles} {input.original} {input.modified}"
+        "python scripts/py_allele_freq_cal.py {input.alleles} {input.modified} {output}"
 
 # Temp
 rule finalize:
     input:
-        expand(join(OUT_DIR, "{prefix}.mutations"), prefix=get_name(SAMPLE)),
-        expand(join(OUT_DIR, "{prefix}.mutations.pos.png"), prefix=get_name(SAMPLE)),
-        expand(join(OUT_DIR, "{prefix}.mutations.freq.png"), prefix=get_name(SAMPLE))
+        mutations=expand(join(OUT_DIR, "{prefix}.mutations"), prefix=get_name(SAMPLE)),
+        plots=expand(join(OUT_DIR, "{prefix}.mutations.freq.png"), prefix=get_name(SAMPLE))
     output:
-        "report.txt"
+        join(OUT_DIR, "mutations.txt")
     shell:
-        "echo DONE > {output}"
+        "cat {input.mutations} > {output}"
 
 #------------------------------------------------------------------------------
 # notestoself;

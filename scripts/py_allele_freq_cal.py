@@ -36,8 +36,9 @@ for index, row in in_df.iterrows():
     total, freqs = get_allele_frequencies(bam = sys.argv[2],
                                           chr = row[0],
                                           pos = row[1])
-    out_df.loc[index] = [row[0], row[1], total,
-                         row[2], row[3], row[4],
+    out_df.loc[index] = [row[0], row[1], int(total),
+                         row[2], row[3], "%.3f" % row[4],
                          freqs[row[3]]]
 
 print out_df
+out_df.to_csv(sys.argv[3], sep="\t", index=False)
