@@ -1,0 +1,114 @@
+'''
+varbench pipeline - Calling somatic mutations with bootstrap
+
+write smth about the pipeline here.. what it does etc.
+-----------------------------------------------------------------------
+
+Requirements:
+  See environment.yml
+
+Usage:
+  snakemake \
+  	--snakefile w2-call-somatic-muts-bsp \
+  	--configfile config.w2.yml
+'''
+
+import sys
+from os.path import join, basename, dirname
+from snakemake.utils import R
+
+include: "scripts/functions.py"
+
+#------------------------------------------------------------------------------
+#--------------------------------------------------------------------- Globals-
+#------------------------------------------------------------------------------
+
+# Path to the reference genome.
+REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You must provide a reference file')
+
+# Path to the sample reads.
+NORMAL = config['NORMAL'] if config['NORMAL'] else sys.exit('ERROR: You must provide a normal BAM file')
+TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must provide a tumour BAM file')
+
+# Directory where intermediate files will be written.
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'w2/'
+
+# Bootstrap k count
+K = 100
+
+# Variance callers
+CALLERS = ['mutect', 'vardict', 'somaticsniper']
+
+# For now threads, will scale to cores
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
+
+#------------------------------------------------------------------------------
+# Step 0. Set-up: set up environment
+#
+# TODO: check for dependencies
+#------------------------------------------------------------------------------
+
+rule all:
+    input:
+        join(OUT_DIR, "report.txt")
+
+#------------------------------------------------------------------------------
+# Step 1. Resampling: Resample NORMAL and TUMOUR reads
+#------------------------------------------------------------------------------
+
+# Resample normals
+rule resample_normals:
+    """Resample normals"""
+    input:
+        normal=NORMAL
+    output:
+        temp(join(OUT_DIR, "normal"))
+    message:
+        "Resampling {input.normal}"
+    shell:
+        "readCount=$(samtools view -c {input.normal}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.normal}) <(samtools view {input.normal} | gshuf -r -n $readCount) > {output}.$i.bam; done; "
+        "touch {output}"
+
+# Resample tumours
+rule resample_tumours:
+    """Resample tumours"""
+    input:
+        tumour=TUMOUR
+    output:
+        temp(join(OUT_DIR, "tumour"))
+    message:
+        "Resampling {input.tumour}"
+    shell:
+        "readCount=$(samtools view -c {input.tumour}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.tumour}) <(samtools view {input.tumour} | gshuf -r -n $readCount) > {output}.$i.bam; done; "
+        "touch {output}"
+
+# Call mutations
+rule call_mutations:
+    """Call mutations"""
+    input:
+        callers=CALLERS,
+        reference=REFERENCE,
+        normal=join(OUT_DIR, "normal"),
+        tumour=join(OUT_DIR, "tumour")
+    output:
+        temp(join(OUT_DIR, "mutations"))
+    message:
+        "Calling mutations"
+    run:
+
+        "for i in {{1.."+str(K)+"}}; "
+        "do CALL MUTATION; done; "
+        "touch {output}"
+
+# Temp
+rule finalize:
+    input:
+        join(OUT_DIR, "mutations")
+    output:
+        join(OUT_DIR, "report.txt")
+    shell:
+        "touch {output}"
