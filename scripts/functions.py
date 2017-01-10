@@ -95,3 +95,29 @@ def setup():
 
 def get_name(x):
     return basename(os.path.splitext(x)[0])
+
+def get_caller_cmd(caller, ref, muts, outdir):
+    if caller == 'vardict':
+        return cmd_vardict(ref, muts, outdir)
+    elif caller == 'mutect':
+        return cmd_mutect(ref, muts, outdir)
+    elif caller == 'somaticsniper':
+        return cmd_somaticsniper(ref)
+
+def cmd_vardict(ref, muts, outdir):
+    os.system("awk '{print $1\"\t\"$2\"\t\"$2}' "+muts+ \
+              ' | tail -n +2 > '+join(outdir, "regs.vardict.bed"))
+    return 'vardict-java -G '+ref+' -f 0.001 -N "{}|{}" -b "{}|{}" ' \
+           '-c 1 -S 2 -E 3 '+join(outdir, "regs.vardict.bed")+' | scripts/testsomatic.R | scripts/var2vcf_paired.pl ' \
+           '-N "{}|{}" -f 0.001 > {}'
+
+def cmd_mutect(ref, muts, outdir):
+    os.system('awk {print $1":"$2"-"$2} '+muts+
+              ' | tail -n +2 > '+join(outdir, "regs.mutect.txt"))
+    return 'java -Xmx2g -jar mutect/mutect.jar --analysis_type MuTect --reference_sequence '+ref+ \
+           '--cosmic mutect/b37_cosmic_v54_120711.vcf --dbsnp mutect/dbsnp_132_b37.leftAligned.vcf.gz ' \
+           '--intervals '+join(outdir, "regs.mutect.txt")+ \
+           '--input_file:normal {} --input_file:tumor {} --out {}'
+
+def cmd_somaticsniper(ref):
+    return "bam-somaticsniper -F vcf -f "+ref+" {} {} {}"

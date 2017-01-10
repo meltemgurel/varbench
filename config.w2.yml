@@ -2,8 +2,14 @@
 REFERENCE: 'data/ref/hsa.hg19.fa'
 
 # Path to the sample reads.
-NORMAL: 'output/SLX-10378.s_1.r_1.org.bam'
-TUMOUR: 'output/SLX-10378.s_1.r_1.mut.bam'
+NORMAL: 'w1/SLX-10378.s_1.r_1.org.bam'
+TUMOUR: 'w1/SLX-10378.s_1.r_1.mutant.bam'
+
+# Path to the mutation file.
+MUTATIONS: 'w1/mutations.txt'
+
+# Selected variant caller
+CALLER: 'somaticsniper'
 
 # Directory where intermediate files will be written.
 OUT_DIR: 'w2'

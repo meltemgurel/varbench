@@ -30,14 +30,17 @@ REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You
 NORMAL = config['NORMAL'] if config['NORMAL'] else sys.exit('ERROR: You must provide a normal BAM file')
 TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must provide a tumour BAM file')
 
+# Path to the mutations file.
+MUTATIONLIST = config['MUTATIONS'] if config['MUTATIONS'] else sys.exit('ERROR: You must provide a list of mutations')
+
 # Directory where intermediate files will be written.
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'w2/'
 
 # Bootstrap k count
 K = 100
 
-# Variance callers
-CALLERS = ['mutect', 'vardict', 'somaticsniper']
+# Variance caller
+CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
 
 # For now threads, will scale to cores
 NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
@@ -65,10 +68,12 @@ rule resample_normals:
         temp(join(OUT_DIR, "normal"))
     message:
         "Resampling {input.normal}"
+    benchmark:
+        "benchmarks/w2-resample_normals.txt"
     shell:
         "readCount=$(samtools view -c {input.normal}); "
         "for i in {{1.."+str(K)+"}}; "
-        "do cat <(samtools view -H {input.normal}) <(samtools view {input.normal} | gshuf -r -n $readCount) > {output}.$i.bam; done; "
+        "do cat <(samtools view -H {input.normal}) <(samtools view {input.normal} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
         "touch {output}"
 
 # Resample tumours
@@ -80,34 +85,104 @@ rule resample_tumours:
         temp(join(OUT_DIR, "tumour"))
     message:
         "Resampling {input.tumour}"
+    benchmark:
+        "benchmarks/w2-resample_tumours.txt"
     shell:
         "readCount=$(samtools view -c {input.tumour}); "
         "for i in {{1.."+str(K)+"}}; "
-        "do cat <(samtools view -H {input.tumour}) <(samtools view {input.tumour} | gshuf -r -n $readCount) > {output}.$i.bam; done; "
+        "do cat <(samtools view -H {input.tumour}) <(samtools view {input.tumour} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
         "touch {output}"
+
+# Sort and index normals
+rule sidx_normals:
+    """Sort and index normals"""
+    input:
+        normal=join(OUT_DIR, "normal")
+    output:
+        temp(join(OUT_DIR, "snormal"))
+    benchmark:
+        "benchmarks/w2-sidx_normals.txt"
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; rm {input.normal}.temp.$i.bam done; "
+        "touch {output}"
+
+# Sort and index tumours
+rule sidx_tumours:
+    """Sort and index tumours"""
+    input:
+        tumour=join(OUT_DIR, "tumour")
+    output:
+        temp(join(OUT_DIR, "stumour"))
+    benchmark:
+        "benchmarks/w2-sidx_tumours.txt"
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; rm {input.tumour}.temp.$i.bam done; "
+        "touch {output}"
+
+#------------------------------------------------------------------------------
+# Step 2. Variant calling: Calling somatic mutations
+#------------------------------------------------------------------------------
 
 # Call mutations
 rule call_mutations:
     """Call mutations"""
     input:
-        callers=CALLERS,
         reference=REFERENCE,
-        normal=join(OUT_DIR, "normal"),
-        tumour=join(OUT_DIR, "tumour")
+        mutationl=MUTATIONLIST,
+        normal=join(OUT_DIR, "snormal"),
+        tumour=join(OUT_DIR, "stumour")
     output:
         temp(join(OUT_DIR, "mutations"))
     message:
-        "Calling mutations"
+        "Calling mutations with "+ CALLER
+    benchmark:
+        "benchmarks/w2-call_mutations.txt"
     run:
+        cmd = get_caller_cmd(CALLER, input.reference, input.mutationl, OUT_DIR)
 
-        "for i in {{1.."+str(K)+"}}; "
-        "do CALL MUTATION; done; "
-        "touch {output}"
+        for i in range(1, K):
+            nbam = join(OUT_DIR, "normal."+str(i)+".bam")
+            tbam = join(OUT_DIR, "tumour."+str(i)+".bam")
+            outf = join(OUT_DIR, "mutations."+str(i)+".vcf")
+
+            if(CALLER == 'vardict'):
+                namenormal = "normal_"+str(i)
+                nametumour = "tumour_"+str(i)
+                cmdf = cmd.format(nametumour, tbam, nbam, nametumour, namenormal, outf)
+
+            elif(CALLER == 'mutect'):
+                cmdf = cmd.format(nbam, tbam, outf)
+
+            elif(CALLER == 'somaticsniper'):
+                cmdf = cmd.format(tbam, nbam, outf)
+
+            print(cmdf)
+            shell(cmdf)
+
+        shell("touch {output}")
+
+#------------------------------------------------------------------------------
+# Step 3. Quality metrics: Calculating quality metrics
+#------------------------------------------------------------------------------
+
+# Calculate quslity metrics
+rule r_calcualte_quality_metrics:
+    input:
+        mutations=join(OUT_DIR, "mutations"),
+        mutationl=MUTATIONLIST
+    output:
+        join(OUT_DIR, "quality.metrics.txt")
+    benchmark:
+        "benchmarks/rw2-_calcualte_quality_metrics.txt"
+    shell:
+        "Rscript --vanilla scripts/r_calcualte_quality_metrics.R {input.mutations} {input.mutationl} "+OUT_DIR+" {output}"
 
 # Temp
 rule finalize:
     input:
-        join(OUT_DIR, "mutations")
+        join(OUT_DIR, "quality.metrics.txt")
     output:
         join(OUT_DIR, "report.txt")
     shell:

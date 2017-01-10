@@ -67,7 +67,7 @@ rule bwa_map:
     output:
         temp(join(OUT_DIR, "{prefix}.aligned.bam"))
     params:
-        rg="@RG\tID:"+get_name(SAMPLE)+"\tSM:"+get_name(SAMPLE),
+        rg='@RG\\tID:'+get_name(SAMPLE)+'\\tSM:'+get_name(SAMPLE),
         tc=NTHREADS
     log:
         join(OUT_DIR, "logs/bwa_map."+get_name(SAMPLE)+".log")
