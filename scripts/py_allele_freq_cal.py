@@ -23,7 +23,7 @@ def get_allele_frequencies(bam, chr, pos):
     bam_file.close()
 
     total = sum(base_freq.itervalues(), 0.0)
-    freqs = {k: round(v / total, 3) for k, v in base_freq.iteritems()}
+    freqs = {k: round(v / total, 6) for k, v in base_freq.iteritems()}
     print freqs
     return total, freqs
 
@@ -37,7 +37,7 @@ for index, row in in_df.iterrows():
                                           chr = row[0],
                                           pos = row[1])
     out_df.loc[index] = [row[0], row[1], int(total),
-                         row[2], row[3], "%.3f" % row[4],
+                         row[2], row[3], "%.6f" % row[4],
                          freqs[row[3]]]
 
 print out_df

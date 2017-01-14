@@ -105,15 +105,23 @@ def get_caller_cmd(caller, ref, muts, outdir):
         return cmd_somaticsniper(ref)
 
 def cmd_vardict(ref, muts, outdir):
-    os.system("awk '{print $1\"\t\"$2\"\t\"$2}' "+muts+ \
-              ' | tail -n +2 > '+join(outdir, "regs.vardict.bed"))
-    return 'vardict-java -G '+ref+' -f 0.001 -N "{}|{}" -b "{}|{}" ' \
+    in_df  = pd.DataFrame.from_csv(muts, sep='\t',
+                                   index_col=None)
+    out_df = in_df.groupby(['CHR'], sort=False).agg({'POS' : [min, max]})
+    out_df.to_csv(join(outdir, "regs.vardict.bed"), sep="\t",
+                  index=True, header=False)
+    return 'vardict-java -G '+ref+' -f 0.001 -N "{}" -b "{}|{}" ' \
            '-c 1 -S 2 -E 3 '+join(outdir, "regs.vardict.bed")+' | scripts/testsomatic.R | scripts/var2vcf_paired.pl ' \
            '-N "{}|{}" -f 0.001 > {}'
 
 def cmd_mutect(ref, muts, outdir):
-    os.system('awk {print $1":"$2"-"$2} '+muts+
-              ' | tail -n +2 > '+join(outdir, "regs.mutect.txt"))
+    in_df  = pd.DataFrame.from_csv(muts, sep='\t',
+                                   index_col=None)
+    out_df = in_df.groupby(['CHR'], sort=False).agg({'POS' : [min, max]})
+    out_df.to_csv(join(outdir, "regs.mutect.txt"), sep="\t",
+                  index=True, header=False)
+    os.system('awk {print $1":"$2"-"$2} '+join(outdir, "regs.mutect.txt")+
+              ' > '+join(outdir, "regs.mutect.txt"))
     return 'java -Xmx2g -jar mutect/mutect.jar --analysis_type MuTect --reference_sequence '+ref+ \
            '--cosmic mutect/b37_cosmic_v54_120711.vcf --dbsnp mutect/dbsnp_132_b37.leftAligned.vcf.gz ' \
            '--intervals '+join(outdir, "regs.mutect.txt")+ \
