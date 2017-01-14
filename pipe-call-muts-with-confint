@@ -1,0 +1,200 @@
+'''
+varbench pipeline - Calling somatic mutations with
+allele frequency confidence intervals
+
+TODO: DESC
+-----------------------------------------------------------------------
+
+Requirements:
+  See environment.yml
+
+Usage:
+  snakemake \
+  	--snakefile pipe-call-muts-with-confint \
+  	--configfile config.p3.yml
+'''
+
+import sys
+import pandas as pd
+from os.path import join, basename, dirname
+from snakemake.utils import R
+
+include: "scripts/functions.py"
+
+#------------------------------------------------------------------------------
+#--------------------------------------------------------------------- Globals-
+#------------------------------------------------------------------------------
+
+# Path to the reference genome.
+REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You must provide a reference file')
+
+# Path to the sample reads.
+NORMAL = config['NORMAL'] if config['NORMAL'] else sys.exit('ERROR: You must provide a normal BAM file')
+TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must provide a tumour BAM file')
+
+# Directory where intermediate files will be written.
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'p3/'
+
+# Bootstrap k count
+K = 50
+
+# Variance caller
+CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
+
+# For now threads, will scale to cores
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
+
+#------------------------------------------------------------------------------
+# Step 0. Set-up: set up environment
+#
+# TODO: check for dependencies
+#------------------------------------------------------------------------------
+
+rule all:
+    input:
+        join(OUT_DIR, "report.txt")
+
+#------------------------------------------------------------------------------
+# Step 1. Resampling: Resample NORMAL and TUMOUR reads
+#------------------------------------------------------------------------------
+
+# Resample normals
+rule resample_normals:
+    """Resample normals"""
+    input:
+        normal=NORMAL
+    output:
+        temp(join(OUT_DIR, "normal"))
+    message:
+        "Resampling {input.normal}"
+    benchmark:
+        "benchmarks/p3-resample_normals.txt"
+    shell:
+        "readCount=$(samtools view -c {input.normal}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.normal}) <(samtools view {input.normal} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
+        "touch {output}"
+
+# Resample tumours
+rule resample_tumours:
+    """Resample tumours"""
+    input:
+        tumour=TUMOUR
+    output:
+        temp(join(OUT_DIR, "tumour"))
+    message:
+        "Resampling {input.tumour}"
+    benchmark:
+        "benchmarks/p3-resample_tumours.txt"
+    shell:
+        "readCount=$(samtools view -c {input.tumour}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.tumour}) <(samtools view {input.tumour} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
+        "touch {output}"
+
+# Sort and index normals
+rule sidx_normals:
+    """Sort and index normals"""
+    input:
+        normal=join(OUT_DIR, "normal")
+    output:
+        temp(join(OUT_DIR, "snormal"))
+    benchmark:
+        "benchmarks/wt-sidx_normals.txt"
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
+        "touch {output}"
+
+# Sort and index tumours
+rule sidx_tumours:
+    """Sort and index tumours"""
+    input:
+        tumour=join(OUT_DIR, "tumour")
+    output:
+        temp(join(OUT_DIR, "stumour"))
+    benchmark:
+        "benchmarks/wt-sidx_tumours.txt"
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
+        "touch {output}"
+
+#------------------------------------------------------------------------------
+# Step 2. Variant calling: Calling somatic mutations
+#------------------------------------------------------------------------------
+
+# Call mutations
+rule call_mutations:
+    """Call mutations"""
+    input:
+        reference=REFERENCE,
+        nbam=NORMAL,
+        normal=join(OUT_DIR, "snormal"),
+        tumour=join(OUT_DIR, "stumour")
+    output:
+        temp(join(OUT_DIR, "mutations"))
+    params:
+        mindepth=10
+    message:
+        "Calling mutations with "+ CALLER
+    benchmark:
+        "benchmarks/w2-call_mutations.txt"
+    run:
+        #shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
+        #      "| awk '{(a[$1]) ? a[$1]=$2 : b[$1]=a[$1]=$2;}END{for (i in a)print i\"\t\"b[i]\"\t\"a[i];}' "
+        #      "| sort -V > "join(OUT_DIR, "covregs.bed"))
+
+        shell("rm "+OUT_DIR+"/*temp*.bam")
+        shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
+              "| (echo -e 'CHR\tPOS' && cat) >"+join(OUT_DIR, "covregs.bed")
+        cmd = get_caller_cmd(CALLER, input.reference,
+                             join(OUT_DIR, "covregs.bed"), OUT_DIR)
+
+        for i in range(1, K):
+            nbam = join(OUT_DIR, "normal."+str(i)+".bam")
+            tbam = join(OUT_DIR, "tumour."+str(i)+".bam")
+            outf = join(OUT_DIR, "mutations."+str(i)+".vcf")
+
+            if(CALLER == 'vardict'):
+                namenormal = "normal_"+str(i)
+                nametumour = "tumour_"+str(i)
+                cmdf = cmd.format(nametumour, tbam, nbam, nametumour, namenormal, outf)
+
+            elif(CALLER == 'mutect'):
+                cmdf = cmd.format(nbam, tbam, outf)
+
+            elif(CALLER == 'somaticsniper'):
+                cmdf = cmd.format(tbam, nbam, outf)
+
+            print(cmdf)
+            shell(cmdf)
+
+        shell("touch {output}")
+
+#------------------------------------------------------------------------------
+# Step 3. Summarizing: Bootstrap results for each somatic mutation
+#------------------------------------------------------------------------------
+
+# Summarize bootstrap results
+rule r_summarize_af_confint:
+    input:
+        mutations=join(OUT_DIR, "mutations")
+    output:
+        text=join(OUT_DIR, "af.confint.txt"),
+        plot=join(OUT_DIR, "af.density.pdf")
+    benchmark:
+        "benchmarks/p3-r_summarize_af_confint.txt"
+    shell:
+        "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
+        +CALLER+" "+OUT_DIR+" {output.plot} {output.text}"
+
+# Temp
+rule finalize:
+    input:
+        text=join(OUT_DIR, "af.confint.txt"),
+        plot=join(OUT_DIR, "af.density.png")
+    output:
+        join(OUT_DIR, "report.txt")
+    shell:
+        "echo DONE!; touch {output}"
