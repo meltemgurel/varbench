@@ -100,7 +100,7 @@ rule sidx_normals:
     output:
         temp(join(OUT_DIR, "snormal"))
     benchmark:
-        "benchmarks/wt-sidx_normals.txt"
+        "benchmarks/p3-sidx_normals.txt"
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
@@ -114,7 +114,7 @@ rule sidx_tumours:
     output:
         temp(join(OUT_DIR, "stumour"))
     benchmark:
-        "benchmarks/wt-sidx_tumours.txt"
+        "benchmarks/p3-sidx_tumours.txt"
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
@@ -139,17 +139,17 @@ rule call_mutations:
     message:
         "Calling mutations with "+ CALLER
     benchmark:
-        "benchmarks/w2-call_mutations.txt"
+        "benchmarks/p3-call_mutations.txt"
     run:
+        shell("rm "+OUT_DIR+"/*temp*.bam")
+        shell("samtools depth {input.nbam} | awk '$3 > {{printf \"%s\\t%s\\n\",$1,$2}}'" + 
+              " | (echo -e 'CHR\tPOS' && cat) > "+join(OUT_DIR, "covregs.bed"))
+
         #shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
         #      "| awk '{(a[$1]) ? a[$1]=$2 : b[$1]=a[$1]=$2;}END{for (i in a)print i\"\t\"b[i]\"\t\"a[i];}' "
         #      "| sort -V > "join(OUT_DIR, "covregs.bed"))
 
-        shell("rm "+OUT_DIR+"/*temp*.bam")
-        shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
-              "| (echo -e 'CHR\tPOS' && cat) >"+join(OUT_DIR, "covregs.bed")
-        cmd = get_caller_cmd(CALLER, input.reference,
-                             join(OUT_DIR, "covregs.bed"), OUT_DIR)
+        cmd = get_caller_cmd(CALLER, input.reference, join(OUT_DIR, "covregs.bed"), OUT_DIR)
 
         for i in range(1, K):
             nbam = join(OUT_DIR, "normal."+str(i)+".bam")
@@ -193,8 +193,8 @@ rule r_summarize_af_confint:
 rule finalize:
     input:
         text=join(OUT_DIR, "af.confint.txt"),
-        plot=join(OUT_DIR, "af.density.png")
+        plot=join(OUT_DIR, "af.density.pdf")
     output:
         join(OUT_DIR, "report.txt")
     shell:
-        "echo DONE!; touch {output}"
+        "The analysis is complete. Please see {output.text} and {output.plot} for results.; touch {output}"
