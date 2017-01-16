@@ -12,7 +12,7 @@ mutate <- function(df){
 #create and save the varfile
 data <- droplevels(subset(read.delim(args[1], header = FALSE,
                           col.names = c('chr', 'pos', 'ref', 'cov')),
-                    subset=(cov >= mean(cov) & ! ref %in% c('a','c','g','t'))))
+                    subset = (cov >= mean(cov) & ! ref %in% c('a','c','g','t'))))
 
 mutated <- do.call("rbind", by(data, data$chr, mutate))
 
@@ -27,6 +27,6 @@ write.table(x = mutated[,c('chr','pos','ref','alt','vaf')],
 
 #create and save variant allele frequency plot for reporting
 pdf(args[4])
-hist(mutated$vaf, breaks=seq(0.001,0.1,by=0.005), xlab='allele frequency',
-     main='allele frequency distribution')
+hist(mutated$vaf, breaks = seq(0.001,0.1,by=0.005), xlab = 'allele frequency',
+     main = 'allele frequency distribution')
 dev.off()

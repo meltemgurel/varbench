@@ -31,7 +31,7 @@ vcfprocMutect <- function(clist){
 }
 
 calc_qm <- function(vcf, caller, rlist, rsoms){
-  clist<-read.table(vcf, header=FALSE, stringsAsFactors = FALSE)
+  clist<-read.table(vcf, header = FALSE, stringsAsFactors = FALSE)
 
   if(caller == 'vardict') clist <- vcfprocVardict(clist)
   else if(caller == 'somaticsniper') clist <- vcfprocSomaticSniper(clist)
@@ -56,7 +56,7 @@ calc_qm <- function(vcf, caller, rlist, rsoms){
 }
 
 caller <- args[2]
-rlist  <- droplevels(subset(read.table(args[3], header=TRUE),
+rlist  <- droplevels(subset(read.table(args[3], header = TRUE),
                            RVAF > 0))[, c('CHR', 'POS', 'REF', 'ALT', 'RVAF')]
 rsoms  <- apply(rlist[,-5], 1, paste, collapse = "|")
 vcfs   <- list.files(args[4], pattern = paste0("mutations.", caller, ".*.vcf"),
@@ -69,19 +69,19 @@ qmatrx <- rbind(summ.mean, summ.std.error)
 colnames(qmatrx) <- c('precision', 'recall', 'F-score', 'Rsq')
 
 cat("\n----------------------------------------------------------------------\n\n",
-    file=args[5], append=TRUE)
-cat(paste("Called with ", caller, "\n\n"), file=args[5], append=TRUE)
+    file = args[5], append = TRUE)
+cat(paste("Called with ", caller, "\n\n"), file=args[5], append = TRUE)
 write.table(qmatrx, file = args[5], quote = FALSE, sep = '\t',
             row.names = TRUE, col.names = TRUE, dec = '.', append = TRUE)
 cat("\n--------------------------------------------------------------------\n\n",
-    file=args[5], append=TRUE)
+    file = args[5], append = TRUE)
 
 pdf(args[6])
 med <- median(qmatrx$Rsq, na.rm = TRUE)
-lbnd <- quantile(qmatrx$Rsq,0.025, na.rm = TRUE)
-ubnd <- quantile(qmatrx$Rsq,0.975, na.rm = TRUE)
-plot(density(qmatrx$Rsq, na.rm = TRUE), main='R squared', sub=caller)
-abline(v=med, col='red', lty=2)
-abline(v=lbnd, col='blue', lty=2)
-abline(v=ubnd, col='blue', lty=2)
+lbnd <- quantile(qmatrx$Rsq, 0.025, na.rm = TRUE)
+ubnd <- quantile(qmatrx$Rsq, 0.975, na.rm = TRUE)
+plot(density(qmatrx$Rsq, na.rm = TRUE), main = 'R squared', sub = caller)
+abline(v = med, col = 'red', lty = 2)
+abline(v = lbnd, col = 'blue', lty = 2)
+abline(v = ubnd, col = 'blue', lty = 2)
 dev.off()

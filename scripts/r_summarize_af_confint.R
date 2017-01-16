@@ -31,7 +31,7 @@ vcfprocMutect <- function(clist){
 }
 
 calc_af <- function(vcf, caller, rlist, rsoms){
-  clist<-read.table(vcf, header=FALSE, stringsAsFactors = FALSE)
+  clist<-read.table(vcf, header = FALSE, stringsAsFactors = FALSE)
 
   if(caller == 'vardict') clist <- vcfprocVardict(clist)
   else if(caller == 'somaticsniper') clist <- vcfprocSomaticSniper(clist)
@@ -43,14 +43,14 @@ calc_af <- function(vcf, caller, rlist, rsoms){
 calc_metrics <- function(r) {
   af <- as.numeric(r[-c(1:4)])
   med <- median(af, na.rm = TRUE)
-  lbnd <- quantile(af,0.025, na.rm = TRUE)
-  ubnd <- quantile(af,0.975, na.rm = TRUE)
+  lbnd <- quantile(af, 0.025, na.rm = TRUE)
+  ubnd <- quantile(af, 0.975, na.rm = TRUE)
   plot(density(af, na.rm = TRUE),
-       main='Allele Frequency', sub=paste(paste(r[1:3], collapse = ':'),
+       main = 'Allele Frequency', sub = paste(paste(r[1:3], collapse = ':'),
                                           r[4], sep = "->"))
-  abline(v=med, col='red', lty=2)
-  abline(v=lbnd, col='blue', lty=2)
-  abline(v=ubnd, col='blue', lty=2)
+  abline(v = med, col = 'red', lty = 2)
+  abline(v = lbnd, col = 'blue', lty = 2)
+  abline(v = ubnd, col = 'blue', lty = 2)
   return(c(med, lbnd, ubnd))
 }
 
@@ -64,7 +64,7 @@ afmtrx <- Reduce(function(...) merge(..., by = c('CHR', 'POS', 'REF', 'ALT'),
 afmtrx <- afmtrx[!(rowSums(is.na(afmtrx)) > sum(grepl("VAF", names(afmtrx))) - 6),]
 
 pdf(args[4])
-par(mfrow=c(4,2))
+par(mfrow = c(4,2))
 afdens <- apply(afmtrx, 1, calc_metrics)
 dev.off()
 
