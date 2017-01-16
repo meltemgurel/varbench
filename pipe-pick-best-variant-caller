@@ -41,7 +41,7 @@ OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'p2/'
 K = 100
 
 # Variance caller
-CALLERS = ['vardict','somaticsniper','mutect']
+CALLERS = ['vardict','somaticsniper']
 
 # For now threads, will scale to cores
 NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
@@ -142,22 +142,22 @@ rule call_mutations:
     run:
         shell("rm "+OUT_DIR+"/*temp*.bam")
         for caller in CALLERS:
-            cmd = get_caller_cmd(CALLER, input.reference, input.mutationl, OUT_DIR)
+            cmd = get_caller_cmd(caller, input.reference, input.mutationl, OUT_DIR)
 
             for i in range(1, K):
                 nbam = join(OUT_DIR, "normal."+str(i)+".bam")
                 tbam = join(OUT_DIR, "tumour."+str(i)+".bam")
                 outf = join(OUT_DIR, "mutations."+caller+"."+str(i)+".vcf")
 
-                if(CALLER == 'vardict'):
+                if(caller == 'vardict'):
                     namenormal = "normal_"+str(i)
                     nametumour = "tumour_"+str(i)
                     cmdf = cmd.format(nametumour, tbam, nbam, nametumour, namenormal, outf)
 
-                elif(CALLER == 'mutect'):
+                elif(caller == 'mutect'):
                     cmdf = cmd.format(nbam, tbam, outf)
 
-                elif(CALLER == 'somaticsniper'):
+                elif(caller == 'somaticsniper'):
                     cmdf = cmd.format(tbam, nbam, outf)
 
                 print(cmdf)
