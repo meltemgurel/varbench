@@ -52,7 +52,8 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 
 rule all:
     input:
-        join(OUT_DIR, "report.txt")
+        text=join(OUT_DIR, "af.confint.txt"),
+        plot=join(OUT_DIR, "af.density.pdf")
 
 #------------------------------------------------------------------------------
 # Step 1. Resampling: Resample NORMAL and TUMOUR reads
@@ -142,7 +143,7 @@ rule call_mutations:
         "benchmarks/p3-call_mutations.txt"
     run:
         shell("rm "+OUT_DIR+"/*temp*.bam")
-        shell("samtools depth {input.nbam} | awk '$3 > {{printf \"%s\\t%s\\n\",$1,$2}}'" + 
+        shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{printf \"%s\\t%s\\n\",$1,$2}}'" +
               " | (echo -e 'CHR\tPOS' && cat) > "+join(OUT_DIR, "covregs.bed"))
 
         #shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
@@ -187,14 +188,5 @@ rule r_summarize_af_confint:
         "benchmarks/p3-r_summarize_af_confint.txt"
     shell:
         "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
-        +CALLER+" "+OUT_DIR+" {output.plot} {output.text}"
-
-# Temp
-rule finalize:
-    input:
-        text=join(OUT_DIR, "af.confint.txt"),
-        plot=join(OUT_DIR, "af.density.pdf")
-    output:
-        join(OUT_DIR, "report.txt")
-    shell:
-        "The analysis is complete. Please see {output.text} and {output.plot} for results.; touch {output}"
+        +CALLER+" "+OUT_DIR+" {output.plot} {output.text};"
+        "echo 'The analysis is complete. Please see {output.text} and {output.plot} for results.'"

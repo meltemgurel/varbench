@@ -188,4 +188,4 @@ rule r_calculate_quality_metrics:
                     +caller+" {input.mutationl} "+OUT_DIR+" {output.text} "+out_pdf)
 
         shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.plot} "+' '.join(pdfs))
-        shell("The analysis is complete. Please see {output.text} and {output.plot} for results.")
+        shell("echo 'The analysis is complete. Please see {output.text} and {output.plot} for results.'")

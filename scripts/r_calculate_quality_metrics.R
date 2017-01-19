@@ -45,7 +45,7 @@ calc_qm <- function(vcf, caller, rlist, rsoms){
 
   a <- tp / (tp + fp)
   b <- tp / (tp + fn)
-  c <-  if (a == 0 & b == 0) 0 else 2 * a * b / (a + b)
+  c <-  if (a == 0 & b == 0) NA else 2 * a * b / (a + b)
   u <- union(rsoms, csoms)
   af.a <- rlist$RVAF[match(u, rsoms)]
   af.a[is.na(af.a)] <- 0
@@ -65,9 +65,19 @@ qmatrx <- t(sapply(vcfs, calc_qm, caller, rlist, rsoms))
 
 summ.mean <- apply(qmatrx, 2, mean)
 summ.std.error <- apply(qmatrx, 2, function(x) sd(x)/sqrt(length(x)))
-qmatrx <- rbind(summ.mean, summ.std.error)
 colnames(qmatrx) <- c('precision', 'recall', 'F-score', 'Rsq')
 
+pdf(args[6])
+med <- median(qmatrx[,'Rsq'], na.rm = TRUE)
+lbnd <- quantile(qmatrx[,'Rsq'], 0.025, na.rm = TRUE)
+ubnd <- quantile(qmatrx[,'Rsq'], 0.975, na.rm = TRUE)
+plot(density(qmatrx[,'Rsq'], na.rm = TRUE), main = 'R squared', sub = caller)
+abline(v = med, col = 'red', lty = 2)
+abline(v = lbnd, col = 'blue', lty = 2)
+abline(v = ubnd, col = 'blue', lty = 2)
+dev.off()
+
+qmatrx <- rbind(summ.mean, summ.std.error)
 cat("\n----------------------------------------------------------------------\n\n",
     file = args[5], append = TRUE)
 cat(paste("Called with ", caller, "\n\n"), file=args[5], append = TRUE)
@@ -75,13 +85,3 @@ write.table(qmatrx, file = args[5], quote = FALSE, sep = '\t',
             row.names = TRUE, col.names = TRUE, dec = '.', append = TRUE)
 cat("\n--------------------------------------------------------------------\n\n",
     file = args[5], append = TRUE)
-
-pdf(args[6])
-med <- median(qmatrx$Rsq, na.rm = TRUE)
-lbnd <- quantile(qmatrx$Rsq, 0.025, na.rm = TRUE)
-ubnd <- quantile(qmatrx$Rsq, 0.975, na.rm = TRUE)
-plot(density(qmatrx$Rsq, na.rm = TRUE), main = 'R squared', sub = caller)
-abline(v = med, col = 'red', lty = 2)
-abline(v = lbnd, col = 'blue', lty = 2)
-abline(v = ubnd, col = 'blue', lty = 2)
-dev.off()
