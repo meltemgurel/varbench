@@ -2,11 +2,11 @@
 REFERENCE: 'data/ref/hsa.hg19.fa'
 
 # Path to the sample reads.
-NORMAL: 'p1/SLX-10378.s_1.r_1.org.bam'
-TUMOUR: 'p1/SLX-10378.s_1.r_1.mutant.bam'
+NORMAL: 'p1/SLX-10378.s_1.r_1.normal.bam'
+TUMOUR: 'p1/SLX-10378.s_1.r_1.tumour.bam'
 
 # Path to the mutation file.
-MUTATIONS: 'p1/mutations.txt'
+MUTATIONS: 'p1/SLX-10378.s_1.r_1.mutations.txt'
 
 # Directory where intermediate files will be written.
 OUT_DIR: 'p2'

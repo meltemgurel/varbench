@@ -2,9 +2,9 @@ args = commandArgs(trailingOnly=TRUE)
 nucs = c('A','C','T','G')
 
 mutate <- function(df){
-  #picking interior bases to prevent low coverage within 6bp window
-  idx <- seq(10, nrow(df), 101)
-  df[idx, 'vaf'] <- ((rbeta(length(idx), 1, 5, ncp = 0)*9.9)+0.1)/100
+  org <- sample(seq(101, nrow(df)), 1)
+  idx <- sort(c(seq(org-1, 10, -101), seq(org, nrow(df), 101)))
+  df[idx, 'vaf'] <- ((rbeta(length(idx), 1, 5, ncp = 0)*29.9)+0.1)/100
   df[idx, 'alt'] <- sapply(df[idx, 'ref'], function(r) sample(nucs[nucs!=r], 1))
   return(df[idx,])
 }
@@ -27,6 +27,6 @@ write.table(x = mutated[,c('chr','pos','ref','alt','vaf')],
 
 #create and save variant allele frequency plot for reporting
 pdf(args[4])
-hist(mutated$vaf, breaks = seq(0.001,0.1,by=0.005), xlab = 'allele frequency',
+hist(mutated$vaf, breaks = seq(0.001,0.3,by=0.005), xlab = 'allele frequency',
      main = 'allele frequency distribution')
 dev.off()

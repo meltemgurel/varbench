@@ -34,6 +34,12 @@ SAMPLE1 = config['SAMPLE1'] if config['SAMPLE1'] else sys.exit('ERROR: You must 
 SAMPLE2 = config['SAMPLE2'] if config['SAMPLE2'] else sys.exit('ERROR: You must provide a sample file')
 SAMPLE = SAMPLE1
 
+# Minimum coverage depth
+MINDEPTH = config['MINDEPTH'] if config['MINDEPTH'] else 10
+
+# Maximum coverage depth
+MAXDEPTH = config['MAXDEPTH'] if config['MAXDEPTH'] else 10000
+
 # Directory where intermediate files will be written.
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'p1/'
 
@@ -51,13 +57,13 @@ setup()
 
 rule all:
     input:
-        join(OUT_DIR, "mutations.txt")
+        join(OUT_DIR, "report.txt")
 
 #------------------------------------------------------------------------------
 # Step 1. Alignment: Align the SAMPLE to the REFERENCE and sort
 #------------------------------------------------------------------------------
 
-# Align the sample to reference genome
+# Align the sample to the reference genome
 rule bwa_map:
     """Run bwa mem"""
     input:
@@ -65,7 +71,7 @@ rule bwa_map:
         read1=SAMPLE1,
         read2=SAMPLE2
     output:
-        temp(join(OUT_DIR, "{prefix}.aligned.bam"))
+        temp(join(OUT_DIR, "{prefix}.aligned.sam"))
     params:
         rg='@RG\\tID:'+get_name(SAMPLE)+'\\tSM:'+get_name(SAMPLE),
         tc=NTHREADS
@@ -81,34 +87,84 @@ rule bwa_map:
             shell("bwa index "+input.reference)
         #run bwa mem to align the reads
         shell("(bwa mem -R '{params.rg}' -t {params.tc} {input.reference} {input.read1} {input.read2} | "
-              "samtools view -Sb -F 3844 - > {output}) 2> {log}")
+              "samtools view -Sh -F 3844 - > {output}) 2> {log}")
 
-# Sort the aligned reads
-rule samtools_org_sort:
+# Split the aligned reads 50-50 as the normal and tumour-template
+# TODO fix intermediate files
+rule partition_reads:
     input:
-        join(OUT_DIR, "{prefix}.aligned.bam")
+        join(OUT_DIR, "{prefix}.aligned.sam")
     output:
-        join(OUT_DIR, "{prefix}.org.bam")
+        normal=temp(join(OUT_DIR, "{prefix}.normal.temp.sam")),
+        tumour=temp(join(OUT_DIR, "{prefix}.tumour.temp.sam"))
     log:
-        join(OUT_DIR, "logs/samtools_org_sort."+get_name(SAMPLE)+".log")
+        join(OUT_DIR, "logs/split_aligned."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_org_sort.txt"
+        "benchmarks/p1-split_aligned.txt"
+    shell:
+        "(echo ***ALIGNED SAMPLE STATS***; samtools flagstat {input}) > "+join(OUT_DIR, "readStats.txt")+"; "
+        "samtools view {input} | awk -F'\\t' '!seen[$1]++ {{print $1}}' | shuf > alln; "
+        "hf=$(($(wc -l < alln)/2)); head -n $hf alln > norn; tail -n $hf alln > tumn; "
+        "cat <(samtools view -H {input}) <(grep -Fwf norn {input}) > {output.normal}; "
+        "cat <(samtools view -H {input}) <(grep -Fwf tumn {input}) > {output.tumour}; "
+        "rm alln norn tumn"
+
+# Sort the normal
+rule samtools_normal_sort:
+    input:
+        join(OUT_DIR, "{prefix}.normal.temp.sam")
+    output:
+        join(OUT_DIR, "{prefix}.normal.bam")
+    log:
+        join(OUT_DIR, "logs/samtools_normal_sort."+get_name(SAMPLE)+".log")
+    benchmark:
+        "benchmarks/p1-samtools_normal_sort.txt"
     shell:
         "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
         "-O bam {input} > {output}) 2> {log}"
 
-# Index the aligned reads
-rule samtools_org_index:
+# Index the normal
+rule samtools_normal_index:
     input:
-        join(OUT_DIR, "{prefix}.org.bam")
+        join(OUT_DIR, "{prefix}.normal.bam")
     output:
-        join(OUT_DIR, "{prefix}.org.bam.bai")
+        join(OUT_DIR, "{prefix}.normal.bam.bai")
     log:
-        join(OUT_DIR, "logs/samtools_org_index."+get_name(SAMPLE)+".log")
+        join(OUT_DIR, "logs/samtools_normal_index."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_org_index.txt"
+        "benchmarks/p1-samtools_normal_index.txt"
     shell:
-        "(samtools index {input}) 2> {log}"
+        "(samtools index {input}) 2> {log}; (echo ***NORMAL SAMPLE STATS***; "
+        "samtools flagstat {input}) >> "+join(OUT_DIR, "readStats.txt")
+
+# Sort the tumour
+rule samtools_tumour_sort:
+    input:
+        join(OUT_DIR, "{prefix}.tumour.temp.sam")
+    output:
+        temp(join(OUT_DIR, "{prefix}.tumour-template.bam"))
+    log:
+        join(OUT_DIR, "logs/samtools_tumour_sort."+get_name(SAMPLE)+".log")
+    benchmark:
+        "benchmarks/p1-samtools_tumour_sort.txt"
+    shell:
+        "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
+        "-O bam {input} > {output}) 2> {log}"
+
+# Index the tumour
+rule samtools_tumour_index:
+    input:
+        join(OUT_DIR, "{prefix}.tumour-template.bam")
+    output:
+        temp(join(OUT_DIR, "{prefix}.tumour-template.bam.bai"))
+    log:
+        join(OUT_DIR, "logs/samtools_tumour_index."+get_name(SAMPLE)+".log")
+    benchmark:
+        "benchmarks/p1-samtools_tumour_index.txt"
+    shell:
+        "(samtools index {input}) 2> {log}; "
+        "(echo ***TUMOUR SAMPLE BEFORE MODIFICATION STATS***; "
+        "samtools flagstat {input}) >> "+join(OUT_DIR, "readStats.txt")
 
 #------------------------------------------------------------------------------
 # Step 2. Coverage: Identify coverage using bedtools
@@ -119,28 +175,24 @@ rule samtools_org_index:
 rule samtools_mpileup:
     input:
         reference=REFERENCE,
-        reads=join(OUT_DIR, "{prefix}.org.bam"),
-        readsi=join(OUT_DIR, "{prefix}.org.bam.bai")
+        tumour=join(OUT_DIR, "{prefix}.tumour-template.bam"),
+        tumouri=join(OUT_DIR, "{prefix}.tumour-template.bam.bai")
     output:
         temp(join(OUT_DIR, "{prefix}.regions"))
     params:
-        maxdepth=10000, # At a position, read maximally INT reads per input file (default is 8000)
-        mindepth=10
+        maxdepth=MAXDEPTH,
+        mindepth=MINDEPTH
     log:
         join(OUT_DIR, "logs/samtools_mpileup."+get_name(SAMPLE)+".log")
     benchmark:
         "benchmarks/p1-samtools_mpileup.txt"
     shell:
-        "(samtools mpileup -f {input.reference} {input.reads} -d {params.maxdepth} | "
+        "(samtools mpileup -f {input.reference} {input.tumour} -d {params.maxdepth} | "
         "awk '$4 > {params.mindepth} {{printf \"%s\\t%s\\t%s\\t%s\\n\",$1,$2,$3,$4}}' "
         "> {output}) 2> {log}"
 
 #------------------------------------------------------------------------------
 # Step 3. Mutations: Generating the desired somatic mutations
-#
-# TODO: make sure the 6bp window around the nuc is covered
-# TODO: maybe specify a 6bp window and let bamsurgeon randomly choose the nuc?
-# TODO: check R libs, silence warnings
 #------------------------------------------------------------------------------
 
 # Select bases to create the varfile
@@ -167,13 +219,13 @@ rule r_create_varfile:
 rule bamsurgeon_addsnv:
     input:
         varfile=join(OUT_DIR, "{prefix}.varfile"),
-        targetbam=join(OUT_DIR, "{prefix}.org.bam"),
-        targetbami=join(OUT_DIR, "{prefix}.org.bam.bai"),
+        targetbam=join(OUT_DIR, "{prefix}.tumour-template.bam"),
+        targetbami=join(OUT_DIR, "{prefix}.tumour-template.bam.bai"),
         reference=REFERENCE
     output:
         temp(join(OUT_DIR, "{prefix}.mut.bam"))
     params:
-        "-p 128 --mindepth 10 --maxdepth 10000 --ignoresnps --force --tagreads "
+        "-p 128 --mindepth "+str(MINDEPTH)+" --maxdepth "+str(MAXDEPTH)+" --ignoresnps --force --tagreads "
         "--tmpdir "+join(OUT_DIR, "addsnv")
     log:
         join(OUT_DIR, "logs/bamsurgeon_addsnv."+get_name(SAMPLE)+".log")
@@ -188,7 +240,7 @@ rule samtools_mut_sort:
     input:
         join(OUT_DIR, "{prefix}.mut.bam")
     output:
-        join(OUT_DIR, "{prefix}.mutant.bam")
+        join(OUT_DIR, "{prefix}.tumour.bam")
     log:
         join(OUT_DIR, "logs/samtools_mut_sort."+get_name(SAMPLE)+".log")
     benchmark:
@@ -200,15 +252,16 @@ rule samtools_mut_sort:
 # Index the mutated reads
 rule samtools_mut_index:
     input:
-        join(OUT_DIR, "{prefix}.mutant.bam")
+        join(OUT_DIR, "{prefix}.tumour.bam")
     output:
-        join(OUT_DIR, "{prefix}.mutant.bam.bai")
+        join(OUT_DIR, "{prefix}.tumour.bam.bai")
     log:
         join(OUT_DIR, "logs/samtools_mut_index."+get_name(SAMPLE)+".log")
     benchmark:
         "benchmarks/p1-samtools_mut_index.txt"
     shell:
-        "(samtools index {input}) 2> {log}"
+        "(samtools index {input}) 2> {log}; "
+        "(echo ***TUMOUR SAMPLE AFTER MODIFICATION STATS***; samtools flagstat {input}) >> "+join(OUT_DIR, "readStats.txt")
 
 #------------------------------------------------------------------------------
 # Step 5. Checksum: Calculating the allele frequency of the induced mutations
@@ -218,21 +271,29 @@ rule samtools_mut_index:
 rule py_allele_freq_cal:
     input:
         alleles=join(OUT_DIR, "{prefix}.alleles"),
-        modified=join(OUT_DIR, "{prefix}.mutant.bam"),
-        modifiedi=join(OUT_DIR, "{prefix}.mutant.bam.bai"),
+        normal=join(OUT_DIR, "{prefix}.normal.bam"),
+        normali=join(OUT_DIR, "{prefix}.normal.bam.bai"),
+        tumour=join(OUT_DIR, "{prefix}.tumour.bam"),
+        tumouri=join(OUT_DIR, "{prefix}.tumour.bam.bai"),
     output:
-        temp(join(OUT_DIR, "{prefix}.mutations"))
+        originals=join(OUT_DIR, "{prefix}.originals.txt"),
+        mutations=join(OUT_DIR, "{prefix}.mutations.txt")
+    params:
+        maxdepth=MAXDEPTH
     benchmark:
         "benchmarks/p1-py_allele_freq_cal.txt"
     shell:
-        "python scripts/py_allele_freq_cal.py {input.alleles} {input.modified} {output}"
+        "python scripts/py_allele_freq_cal.py {input.alleles} {input.normal} {output.originals} {params.maxdepth}; "
+        "python scripts/py_allele_freq_cal.py {input.alleles} {input.tumour} {output.mutations} {params.maxdepth}"
 
 # Create the somatic mutations list
 rule cat_somatic_mutations:
     input:
-        mutations=expand(join(OUT_DIR, "{prefix}.mutations"), prefix=get_name(SAMPLE)),
+        originals=expand(join(OUT_DIR, "{prefix}.originals.txt"), prefix=get_name(SAMPLE)),
+        mutations=expand(join(OUT_DIR, "{prefix}.mutations.txt"), prefix=get_name(SAMPLE)),
         plots=expand(join(OUT_DIR, "{prefix}.mutations.freq.pdf"), prefix=get_name(SAMPLE))
     output:
-        join(OUT_DIR, "mutations.txt")
+        join(OUT_DIR, "report.txt")
     shell:
-        "cat {input.mutations} > {output}"
+        "(echo ***Allele frequencies in the normal sample***; cat {input.originals}; "
+        "echo ***Allele frequencies in the tumour sample***; cat {input.mutations}) >> {output}"

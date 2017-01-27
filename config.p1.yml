@@ -5,6 +5,12 @@ REFERENCE: 'data/ref/hsa.hg19.fa'
 SAMPLE1: 'data/SLX-10378.s_1.r_1.fq'
 SAMPLE2: 'data/SLX-10378.s_1.r_2.fq'
 
+# Minimum coverage depth
+MINDEPTH: 10
+
+# Maximum coverage depth
+MAXDEPTH: 10000
+
 # Directory where intermediate files will be written.
 OUT_DIR: 'p1'
 

@@ -7,7 +7,7 @@ vcfprocVardict <- function(clist){
   clist <- clist[sapply(strsplit(clist$INFO, ";"),
                         function(x) return(if(x[1] == "STATUS=LikelySomatic" & x[3] == "TYPE=SNV") TRUE else FALSE)),
                  c('CHR', 'POS', 'REF', 'ALT', 'TUMOR', 'NORMAL')]
-  clist$VAF <- round(sapply(strsplit(clist$TUMOR, ":"),
+  clist$VAF <- signif(sapply(strsplit(clist$TUMOR, ":"),
                       function(x) as.integer(x[3])/as.integer(x[2])), 3)
   return(clist)
 }
@@ -19,7 +19,7 @@ vcfprocSomaticSniper <- function(clist){
                    sapply(strsplit(clist$NORMAL, ":"), "[")[12,] == 0,
                  c('CHR', 'POS', 'REF', 'ALT', 'TUMOR', 'NORMAL')]
   af <- t(sapply(sapply(sapply(strsplit(clist$TUMOR, ":"), "[")[5,], strsplit, ","),
-                 function(x) round(as.integer(x)/sum(as.integer(x)),3)))
+                 function(x) signif(as.integer(x)/sum(as.integer(x)),3)))
   colnames(af) <- nucs
   clist$VAF <- af[cbind(seq_along(clist$ALT), match(clist$ALT,colnames(af)))]
   return(clist)

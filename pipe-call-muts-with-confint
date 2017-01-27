@@ -152,7 +152,7 @@ rule call_mutations:
 
         cmd = get_caller_cmd(CALLER, input.reference, join(OUT_DIR, "covregs.bed"), OUT_DIR)
 
-        for i in range(1, K):
+        for i in range(1, K+1):
             nbam = join(OUT_DIR, "normal."+str(i)+".bam")
             tbam = join(OUT_DIR, "tumour."+str(i)+".bam")
             outf = join(OUT_DIR, "mutations."+str(i)+".vcf")
