@@ -175,18 +175,23 @@ rule r_calculate_quality_metrics:
         mutations=join(OUT_DIR, "mutations"),
         mutationl=MUTATIONLIST
     output:
-        text=join(OUT_DIR, "results-all-callers.txt"),
-        plot=join(OUT_DIR, "r2dens-all-callers.pdf")
+        quality_metrics=join(OUT_DIR, "results-all-callers.txt"),
+        r2dens_plots=join(OUT_DIR, "r2dens-all-callers.pdf"),
+        afboxplots=join(OUT_DIR, "afbox-all-callers.pdf"),
     benchmark:
         "benchmarks/p2-r_calcualte_quality_metrics.txt"
     run:
-        pdfs = []
+        pdfs_r2 = []
+        pdfs_bp = []
         for caller in CALLERS:
-            out_pdf = join(OUT_DIR, "r2dens-"+caller+".pdf")
-            out_diag = join(OUT_DIR, "af-corr-"+caller+".pdf")
-            pdfs.append(out_pdf)
+            out_r2dens = join(OUT_DIR, "r2dens-"+caller+".pdf")
+            out_afbps = join(OUT_DIR, "afbox-"+caller+".pdf")
+            out_af-corr = join(OUT_DIR, "af-corr-"+caller+".pdf")
+            pdfs_r2.append(out_r2dens)
+            pdfs_bp.append(out_afbps)
             shell("Rscript --vanilla scripts/r_calculate_quality_metrics.R {input.mutations} "
-                    +caller+" {input.mutationl} "+OUT_DIR+" {output.text} "+out_pdf+ " "+ out_diag)
+                    +caller+" {input.mutationl} "+OUT_DIR+" {output.quality_metrics} "
+                    +out_r2dens+ " "+ out_af-corr+ " "+ out_afbps)
 
-        shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.plot} "+' '.join(pdfs))
-        shell("echo 'The analysis is complete. Please see {output.text} and {output.plot} for results.'")
+        shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.r2dens_plots} "+' '.join(pdfs_r2))
+        shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.afboxplots} "+' '.join(pdfs_bp))

@@ -37,11 +37,10 @@ vcfprocMutect <- function(clist)
   return(clist)
 }
 
-drawCorr <- function(actual, predicted, vcf, caller)
+drawCorr <- function(actual, predicted, r2, vcf, caller)
 {
   pos.x <- max(actual)
   pos.y <- min(predicted)
-  r2 <- signif(summary(m <- lm(predicted ~ actual))$r.squared,3)
   eqn <- bquote(r^2 == .(r2))
   plot(actual, predicted, main=paste(caller, "-", vcf),
        xlab="Actual allele frequencies", ylab="Called allele frequencies", pch=20,
@@ -68,14 +67,27 @@ calc_qm <- function(vcf, caller, rlist, rsoms)
   b <- tp / (tp + fn)
   c <-  if (a == 0 & b == 0) NA else 2 * a * b / (a + b)
 
+  return(signif(c(a,b,c), 3))
+}
+
+calc_corr <- function(vcf, caller, rlist, rsoms)
+{
+  clist<-read.table(vcf, header = FALSE, stringsAsFactors = FALSE)
+
+  if(caller == 'vardict') clist <- vcfprocVardict(clist)
+  else if(caller == 'somaticsniper') clist <- vcfprocSomaticSniper(clist)
+  else if(caller == 'mutect') clist <- vcfprocMutect(clist)
+
+  csoms <- gsub("\\s", "", apply(clist[,1:4], 1, paste, collapse = "|"))
+
   af.a <- rlist$AVAF
   af.p <- clist$VAF[match(rsoms, csoms)]
   af.p[is.na(af.p)] <- 0
-  d <- summary(m <- lm(af.p ~ af.a))$r.squared
+  r2 <- signif(summary(m <- lm(af.p ~ af.a))$r.squared,3)
 
-  drawCorr(af.a, af.p, vcf, caller)
+  drawCorr(af.a, af.p, r2, vcf, caller)
 
-  return(signif(c(a,b,c,d), 3))
+  return(c(af.p, r2))
 }
 
 caller <- args[2]
@@ -87,8 +99,20 @@ vcfs   <- list.files(args[4], pattern = paste0("mutations.", caller, ".*.vcf"),
 
 pdf(args[7])
 par(mfrow = c(3,2))
-qmatrx <- t(sapply(vcfs, calc_qm, caller, rlist, rsoms))
+cmatrx <- t(sapply(vcfs, calc_corr, caller, rlist, rsoms))
 dev.off()
+
+colnames(cmatrx) <- c(rsoms,'Rsq')
+
+pdf(args[8])
+par(mar=c(8,3,3,1))
+boxplot.matrix(cmatrx[,c(rsoms)], las=2,
+               main = paste0('Called allele frequencies per induced mutation\n', caller),
+               pch=20, cex=1, cex.axis=0.8)
+dev.off()
+
+qmatrx <- t(sapply(vcfs, calc_qm, caller, rlist, rsoms))
+qmatrx <- cbind(qmatrx, cmatrx[,'Rsq'])
 
 summ.mean <- signif(apply(qmatrx, 2, mean),3)
 summ.std.error <- signif(apply(qmatrx, 2, function(x) sd(x)/sqrt(length(x))),3)
@@ -104,12 +128,12 @@ abline(v = lbnd, col = 'blue', lty = 2)
 abline(v = ubnd, col = 'blue', lty = 2)
 dev.off()
 
-qmatrx <- rbind(summ.mean, summ.std.error)
-colnames(qmatrx) <- c('precision', 'recall', 'F-score', 'Rsq')
+qmsumm <- rbind(summ.mean, summ.std.error)
+colnames(qmsumm) <- c('precision', 'recall', 'F-score', 'Rsq')
 cat("\n----------------------------------------------------------------------\n\n",
     file = args[5], append = TRUE)
 cat(paste("Called with ", caller, "\n\n"), file=args[5], append = TRUE)
-write.table(qmatrx, file = args[5], quote = FALSE, sep = '\t',
+write.table(qmsumm, file = args[5], quote = FALSE, sep = '\t',
             row.names = TRUE, col.names = TRUE, dec = '.', append = TRUE)
 cat("\n--------------------------------------------------------------------\n\n",
     file = args[5], append = TRUE)
