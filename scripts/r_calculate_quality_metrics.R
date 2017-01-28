@@ -71,7 +71,7 @@ calc_qm <- function(vcf, caller, rlist, rsoms)
   af.a <- rlist$AVAF
   af.p <- clist$VAF[match(rsoms, csoms)]
   af.p[is.na(af.p)] <- 0
-  d <- signif(summary(m <- lm(af.p ~ af.a))$r.squared, 3)
+  d <- summary(m <- lm(af.p ~ af.a))$r.squared
 
   drawCorr(af.a, af.p, vcf, caller)
 
