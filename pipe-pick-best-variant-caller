@@ -54,8 +54,7 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 
 rule all:
     input:
-        text=join(OUT_DIR, "results-all-callers.txt"),
-        plot=join(OUT_DIR, "r2dens-all-callers.pdf")
+        results=join(OUT_DIR, "analysis/results.txt")
 
 #------------------------------------------------------------------------------
 # Step 1. Resampling: Resample NORMAL and TUMOUR reads
@@ -175,23 +174,13 @@ rule r_calculate_quality_metrics:
         mutations=join(OUT_DIR, "mutations"),
         mutationl=MUTATIONLIST
     output:
-        quality_metrics=join(OUT_DIR, "results-all-callers.txt"),
-        r2dens_plots=join(OUT_DIR, "r2dens-all-callers.pdf"),
-        afboxplots=join(OUT_DIR, "afbox-all-callers.pdf"),
+        results=join(OUT_DIR, "analysis/results.txt")
     benchmark:
         "benchmarks/p2-r_calcualte_quality_metrics.txt"
     run:
-        pdfs_r2 = []
-        pdfs_bp = []
         for caller in CALLERS:
-            out_r2dens = join(OUT_DIR, "r2dens-"+caller+".pdf")
-            out_afbps = join(OUT_DIR, "afbox-"+caller+".pdf")
-            out_af-corr = join(OUT_DIR, "af-corr-"+caller+".pdf")
-            pdfs_r2.append(out_r2dens)
-            pdfs_bp.append(out_afbps)
+            pdf_r2s = join(OUT_DIR, "analysis/r2densities_"+caller+".pdf")
+            pdf_afs = join(OUT_DIR, "analysis/allelefreqs_"+caller+".pdf")
             shell("Rscript --vanilla scripts/r_calculate_quality_metrics.R {input.mutations} "
-                    +caller+" {input.mutationl} "+OUT_DIR+" {output.quality_metrics} "
-                    +out_r2dens+ " "+ out_af-corr+ " "+ out_afbps)
-
-        shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.r2dens_plots} "+' '.join(pdfs_r2))
-        shell("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output.afboxplots} "+' '.join(pdfs_bp))
+                    +caller+" {input.mutationl} "+OUT_DIR+" {output.results} "
+                    +pdf_r2s+" "+join(OUT_DIR, "analysis/af_corr-"+caller+".pdf")+" "+pdf_afs)
