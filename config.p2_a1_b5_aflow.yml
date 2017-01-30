@@ -1,0 +1,15 @@
+# Path to the reference genome.
+REFERENCE: 'data/ref/hsa.hg19.fa'
+
+# Path to the sample reads.
+NORMAL: 'p1_a1_b5_aflow/SLX-10378.s_1.r_1.normal.bam'
+TUMOUR: 'p1_a1_b5_aflow/SLX-10378.s_1.r_1.tumour.bam'
+
+# Path to the mutation file.
+MUTATIONS: 'p1_a1_b5_aflow/SLX-10378.s_1.r_1.mutations.txt'
+
+# Directory where intermediate files will be written.
+OUT_DIR: 'p2_a1_b5_aflow'
+
+# Number of cores to run on
+NTHREADS: 64

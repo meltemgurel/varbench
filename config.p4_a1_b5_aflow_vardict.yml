@@ -1,0 +1,14 @@
+# Directory where the VCF files are
+VCF_DIR: 'p2_a1_b5_aflow'
+
+# Directory where intermediate files will be written.
+OUT_DIR: 'p4_a1_b5_aflow_vardict'
+
+# Variance caller (vardict, somaticsniper, mutect)
+CALLER: 'vardict'
+
+# Number of mutations to validate
+NMUTATIONS: 20
+
+# Number of cores to run on
+NTHREADS: 64

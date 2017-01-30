@@ -53,7 +53,7 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 rule all:
     input:
         results=join(OUT_DIR, "analysis/results.txt"),
-        r2densities=join(OUT_DIR, "analysis/r2densities.pdf"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf"),
         allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
 
 #------------------------------------------------------------------------------
@@ -184,10 +184,10 @@ rule r_summarize_af_confint:
         mutations=join(OUT_DIR, "mutations")
     output:
         results=join(OUT_DIR, "analysis/results.txt"),
-        r2densities=join(OUT_DIR, "analysis/r2densities.pdf"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf"),
         allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
     benchmark:
         "benchmarks/p3-r_summarize_af_confint.txt"
     shell:
         "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
-        +CALLER+" "+OUT_DIR+" {output.allelefreqs} {output.r2densities} {output.results}"
+        +CALLER+" "+OUT_DIR+" {output.allelefreqs} {output.afdensities} {output.results}"
