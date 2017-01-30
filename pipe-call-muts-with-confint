@@ -52,8 +52,9 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 
 rule all:
     input:
-        text=join(OUT_DIR, "af.confint.txt"),
-        plot=join(OUT_DIR, "af.density.pdf")
+        results=join(OUT_DIR, "analysis/results.txt"),
+        r2densities=join(OUT_DIR, "analysis/r2densities.pdf"),
+        allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
 
 #------------------------------------------------------------------------------
 # Step 1. Resampling: Resample NORMAL and TUMOUR reads
@@ -182,11 +183,11 @@ rule r_summarize_af_confint:
     input:
         mutations=join(OUT_DIR, "mutations")
     output:
-        text=join(OUT_DIR, "af.confint.txt"),
-        plot=join(OUT_DIR, "af.density.pdf")
+        results=join(OUT_DIR, "analysis/results.txt"),
+        r2densities=join(OUT_DIR, "analysis/r2densities.pdf"),
+        allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
     benchmark:
         "benchmarks/p3-r_summarize_af_confint.txt"
     shell:
         "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
-        +CALLER+" "+OUT_DIR+" {output.plot} {output.text};"
-        "echo 'The analysis is complete. Please see {output.text} and {output.plot} for results.'"
+        +CALLER+" "+OUT_DIR+" {output.allelefreqs} {output.r2densities} {output.results}"

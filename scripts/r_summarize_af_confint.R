@@ -37,7 +37,7 @@ vcfprocMutect <- function(clist)
   return(clist)
 }
 
-calc_af <- function(vcf, caller, rlist, rsoms)
+calc_af <- function(vcf, caller)
 {
   clist<-read.table(vcf, header = FALSE, stringsAsFactors = FALSE)
 
@@ -72,7 +72,16 @@ afmtrx <- Reduce(function(...) merge(..., by = c('CHR', 'POS', 'REF', 'ALT'),
                                   all = TRUE), aflist)
 afmtrx <- afmtrx[!(rowSums(is.na(afmtrx)) > sum(grepl("VAF", names(afmtrx))) - 6),]
 
+af <- t(afmtrx[,-c(1:4)])
+colnames(af) <- gsub("\\s", "", apply(afmtrx[,1:4], 1, paste, collapse = "|"))
 pdf(args[4])
+par(mar=c(8,3,3,1))
+boxplot.matrix(t(afmtrx[,-c(1:4)]), las=2,
+               main=paste0('Called allele frequencies per induced mutation\n', caller),
+               pch=20, cex=1, cex.axis=0.8)
+dev.off()
+
+pdf(args[5])
 par(mfrow = c(4,2))
 afdens <- apply(afmtrx, 1, calc_metrics)
 dev.off()
@@ -81,5 +90,5 @@ afmtrx <- cbind(afmtrx[,1:4],t(afdens))
 colnames(afmtrx) <- c('CHR', 'POS', 'REF', 'ALT',
                       'median.allele.freq', 'lower.bound', 'upper.bound')
 
-write.table(afmtrx, file = args[5], quote = FALSE, sep = '\t',
+write.table(afmtrx, file = args[6], quote = FALSE, sep = '\t',
             row.names = FALSE, col.names = TRUE, dec = '.')
