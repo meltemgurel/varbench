@@ -70,7 +70,7 @@ rule resample_normals:
     message:
         "Resampling {input.normal}"
     benchmark:
-        "benchmarks/p2-resample_normals.txt"
+        join(OUT_DIR, "benchmarks/p2-resample_normals.txt")
     shell:
         "readCount=$(samtools view -c {input.normal}); "
         "for i in {{1.."+str(K)+"}}; "
@@ -87,7 +87,7 @@ rule resample_tumours:
     message:
         "Resampling {input.tumour}"
     benchmark:
-        "benchmarks/p2-resample_tumours.txt"
+        join(OUT_DIR, "benchmarks/p2-resample_tumours.txt")
     shell:
         "readCount=$(samtools view -c {input.tumour}); "
         "for i in {{1.."+str(K)+"}}; "
@@ -102,7 +102,7 @@ rule sidx_normals:
     output:
         temp(join(OUT_DIR, "snormal"))
     benchmark:
-        "benchmarks/p2-sidx_normals.txt"
+        join(OUT_DIR, "benchmarks/p2-sidx_normals.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
@@ -116,7 +116,7 @@ rule sidx_tumours:
     output:
         temp(join(OUT_DIR, "stumour"))
     benchmark:
-        "benchmarks/p2-sidx_tumours.txt"
+        join(OUT_DIR, "benchmarks/p2-sidx_tumours.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
@@ -137,7 +137,7 @@ rule call_mutations:
     output:
         temp(join(OUT_DIR, "mutations"))
     benchmark:
-        "benchmarks/p2-call_mutations.txt"
+        join(OUT_DIR, "benchmarks/p2-call_mutations.txt")
     run:
         shell("rm "+OUT_DIR+"/*temp*.bam")
         for caller in CALLERS:
@@ -176,7 +176,7 @@ rule r_calculate_quality_metrics:
     output:
         results=join(OUT_DIR, "analysis/results.txt")
     benchmark:
-        "benchmarks/p2-r_calcualte_quality_metrics.txt"
+        join(OUT_DIR, "benchmarks/p2-r_calcualte_quality_metrics.txt")
     run:
         for caller in CALLERS:
             pdf_r2s = join(OUT_DIR, "analysis/r2densities_"+caller+".pdf")

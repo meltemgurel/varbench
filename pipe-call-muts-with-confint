@@ -11,7 +11,7 @@ Requirements:
 Usage:
   snakemake \
   	--snakefile pipe-call-muts-with-confint \
-  	--configfile config.p3.yml
+  	--configfile config.call-muts-with-confint.yml
 '''
 
 import sys
@@ -70,7 +70,7 @@ rule resample_normals:
     message:
         "Resampling {input.normal}"
     benchmark:
-        "benchmarks/p3-resample_normals.txt"
+        join(OUT_DIR, "benchmarks/p3-resample_normals.txt")
     shell:
         "readCount=$(samtools view -c {input.normal}); "
         "for i in {{1.."+str(K)+"}}; "
@@ -87,7 +87,7 @@ rule resample_tumours:
     message:
         "Resampling {input.tumour}"
     benchmark:
-        "benchmarks/p3-resample_tumours.txt"
+        join(OUT_DIR, "benchmarks/p3-resample_tumours.txt")
     shell:
         "readCount=$(samtools view -c {input.tumour}); "
         "for i in {{1.."+str(K)+"}}; "
@@ -102,7 +102,7 @@ rule sidx_normals:
     output:
         temp(join(OUT_DIR, "snormal"))
     benchmark:
-        "benchmarks/p3-sidx_normals.txt"
+        join(OUT_DIR, "benchmarks/p3-sidx_normals.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
@@ -116,7 +116,7 @@ rule sidx_tumours:
     output:
         temp(join(OUT_DIR, "stumour"))
     benchmark:
-        "benchmarks/p3-sidx_tumours.txt"
+        join(OUT_DIR, "benchmarks/p3-sidx_tumours.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
         "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
@@ -141,7 +141,7 @@ rule call_mutations:
     message:
         "Calling mutations with "+ CALLER
     benchmark:
-        "benchmarks/p3-call_mutations.txt"
+        join(OUT_DIR, "benchmarks/p3-call_mutations.txt")
     run:
         shell("rm "+OUT_DIR+"/*temp*.bam")
         shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{printf \"%s\\t%s\\n\",$1,$2}}'" +
@@ -187,7 +187,7 @@ rule r_summarize_af_confint:
         afdensities=join(OUT_DIR, "analysis/afdensities.pdf"),
         allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
     benchmark:
-        "benchmarks/p3-r_summarize_af_confint.txt"
+        join(OUT_DIR, "benchmarks/p3-r_summarize_af_confint.txt")
     shell:
         "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
         +CALLER+" "+OUT_DIR+" {output.allelefreqs} {output.afdensities} {output.results}"

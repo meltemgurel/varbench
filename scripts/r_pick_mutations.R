@@ -1,4 +1,5 @@
 args = commandArgs(trailingOnly=TRUE)
+nucs = c('A','C','G','T')
 
 vcfprocVardict <- function(clist)
 {

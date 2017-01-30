@@ -80,7 +80,7 @@ rule bwa_map:
     message:
         "Running alignment with {params.tc} threads on {input.read1} and {input.read2}."
     benchmark:
-        "benchmarks/p1-bwa_map.txt"
+        join(OUT_DIR, "benchmarks/p1-bwa_map.txt")
     run:
         #create reference index if it doesn't exist
         if not os.path.isfile(input.reference+'.bwt'):
@@ -100,7 +100,7 @@ rule partition_reads:
     log:
         join(OUT_DIR, "logs/split_aligned."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-split_aligned.txt"
+        join(OUT_DIR, "benchmarks/p1-split_aligned.txt")
     shell:
         "(echo ***ALIGNED SAMPLE STATS***; samtools flagstat {input}) > "+join(OUT_DIR, "readStats.txt")+"; "
         "samtools view {input} | awk -F'\\t' '!seen[$1]++ {{print $1}}' | shuf > alln; "
@@ -118,7 +118,7 @@ rule samtools_normal_sort:
     log:
         join(OUT_DIR, "logs/samtools_normal_sort."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_normal_sort.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_normal_sort.txt")
     shell:
         "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
         "-O bam {input} > {output}) 2> {log}"
@@ -132,7 +132,7 @@ rule samtools_normal_index:
     log:
         join(OUT_DIR, "logs/samtools_normal_index."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_normal_index.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_normal_index.txt")
     shell:
         "(samtools index {input}) 2> {log}; (echo ***NORMAL SAMPLE STATS***; "
         "samtools flagstat {input}) >> "+join(OUT_DIR, "readStats.txt")
@@ -146,7 +146,7 @@ rule samtools_tumour_sort:
     log:
         join(OUT_DIR, "logs/samtools_tumour_sort."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_tumour_sort.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_tumour_sort.txt")
     shell:
         "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
         "-O bam {input} > {output}) 2> {log}"
@@ -160,7 +160,7 @@ rule samtools_tumour_index:
     log:
         join(OUT_DIR, "logs/samtools_tumour_index."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_tumour_index.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_tumour_index.txt")
     shell:
         "(samtools index {input}) 2> {log}; "
         "(echo ***TUMOUR SAMPLE BEFORE MODIFICATION STATS***; "
@@ -185,7 +185,7 @@ rule samtools_mpileup:
     log:
         join(OUT_DIR, "logs/samtools_mpileup."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_mpileup.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_mpileup.txt")
     shell:
         "(samtools mpileup -f {input.reference} {input.tumour} -d {params.maxdepth} | "
         "awk '$4 > {params.mindepth} {{printf \"%s\\t%s\\t%s\\t%s\\n\",$1,$2,$3,$4}}' "
@@ -204,7 +204,7 @@ rule r_create_varfile:
         alleles=temp(join(OUT_DIR, "{prefix}.alleles")),
         mutfreq=join(OUT_DIR, "{prefix}.mutations.freq.pdf")
     benchmark:
-        "benchmarks/p1-r_create_varfile.txt"
+        join(OUT_DIR, "benchmarks/p1-r_create_varfile.txt")
     shell:
         "Rscript --vanilla scripts/r_create_varfile.R {input} {output.varfile} "
         "{output.alleles} {output.mutfreq}"
@@ -230,7 +230,7 @@ rule bamsurgeon_addsnv:
     log:
         join(OUT_DIR, "logs/bamsurgeon_addsnv."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-bamsurgeon_addsnv.txt"
+        join(OUT_DIR, "benchmarks/p1-bamsurgeon_addsnv.txt")
     shell:
         "(addsnv.py {params} -v {input.varfile} -f {input.targetbam} -r {input.reference} "
         "-o {output}) 2> {log}"
@@ -244,7 +244,7 @@ rule samtools_mut_sort:
     log:
         join(OUT_DIR, "logs/samtools_mut_sort."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_mut_sort.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_mut_sort.txt")
     shell:
         "(samtools sort -T "+OUT_DIR+"{wildcards.prefix} "
         "-O bam {input} > {output}) 2> {log}"
@@ -258,7 +258,7 @@ rule samtools_mut_index:
     log:
         join(OUT_DIR, "logs/samtools_mut_index."+get_name(SAMPLE)+".log")
     benchmark:
-        "benchmarks/p1-samtools_mut_index.txt"
+        join(OUT_DIR, "benchmarks/p1-samtools_mut_index.txt")
     shell:
         "(samtools index {input}) 2> {log}; "
         "(echo ***TUMOUR SAMPLE AFTER MODIFICATION STATS***; samtools flagstat {input}) >> "+join(OUT_DIR, "readStats.txt")
@@ -281,7 +281,7 @@ rule py_allele_freq_cal:
     params:
         maxdepth=MAXDEPTH
     benchmark:
-        "benchmarks/p1-py_allele_freq_cal.txt"
+        join(OUT_DIR, "benchmarks/p1-py_allele_freq_cal.txt")
     shell:
         "python scripts/py_allele_freq_cal.py {input.alleles} {input.normal} {output.originals} {params.maxdepth}; "
         "python scripts/py_allele_freq_cal.py {input.alleles} {input.tumour} {output.mutations} {params.maxdepth}"
