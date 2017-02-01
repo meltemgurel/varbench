@@ -179,8 +179,14 @@ rule r_calculate_quality_metrics:
         join(OUT_DIR, "benchmarks/p2-r_calcualte_quality_metrics.txt")
     run:
         for caller in CALLERS:
-            pdf_r2s = join(OUT_DIR, "analysis/r2densities_"+caller+".pdf")
-            pdf_afs = join(OUT_DIR, "analysis/allelefreqs_"+caller+".pdf")
+            pdf_afdist = join(OUT_DIR, "analysis/afdist_"+caller+".pdf")
+            pdf_afcorr = join(OUT_DIR, "analysis/afcorr_"+caller+".pdf")
+            pdf_precision = join(OUT_DIR, "analysis/precision_"+caller+".pdf")
+            pdf_recall = join(OUT_DIR, "analysis/recall_"+caller+".pdf")
+            pdf_fscore = join(OUT_DIR, "analysis/fscore_"+caller+".pdf")
+            pdf_r2 = join(OUT_DIR, "analysis/r2_"+caller+".pdf")
+
             shell("Rscript --vanilla scripts/r_calculate_quality_metrics.R {input.mutations} "
-                    +caller+" {input.mutationl} "+OUT_DIR+" {output.results} "
-                    +pdf_r2s+" "+join(OUT_DIR, "analysis/af_corr-"+caller+".pdf")+" "+pdf_afs)
+                    +caller+" {input.mutationl} "+OUT_DIR+" "+pdf_afdist+" "
+                    +pdf_afcorr+" "+pdf_precision+" "+pdf_recall+" "+pdf_fscore+" "+pdf_r2
+                    +" {output.results}")

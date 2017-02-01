@@ -5,11 +5,11 @@ REFERENCE: 'data/ref/hsa.hg19.fa'
 NORMAL: 'run1_p1/SLX-10378.s_1.r_1.normal.bam'
 TUMOUR: 'run1_p1/SLX-10378.s_1.r_1.tumour.bam'
 
-# Path to the mutation file.
-MUTATIONS: 'run1_p1/SLX-10378.s_1.r_1.mutations.txt'
-
 # Directory where intermediate files will be written.
-OUT_DIR: 'run1_p2'
+OUT_DIR: 'run1_p3_somaticsniper'
+
+# Variance caller (vardict, somaticsniper, mutect)
+CALLER: 'somaticsniper'
 
 # Number of cores to run on
 NTHREADS: 64

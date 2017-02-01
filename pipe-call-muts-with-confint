@@ -36,7 +36,7 @@ TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must pro
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'p3/'
 
 # Bootstrap k count
-K = 50
+K = 100
 
 # Variance caller
 CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
@@ -53,8 +53,7 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 rule all:
     input:
         results=join(OUT_DIR, "analysis/results.txt"),
-        afdensities=join(OUT_DIR, "analysis/afdensities.pdf"),
-        allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
 
 #------------------------------------------------------------------------------
 # Step 1. Resampling: Resample NORMAL and TUMOUR reads
@@ -184,10 +183,9 @@ rule r_summarize_af_confint:
         mutations=join(OUT_DIR, "mutations")
     output:
         results=join(OUT_DIR, "analysis/results.txt"),
-        afdensities=join(OUT_DIR, "analysis/afdensities.pdf"),
-        allelefreqs=join(OUT_DIR, "analysis/allelefreqs.pdf")
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
     benchmark:
         join(OUT_DIR, "benchmarks/p3-r_summarize_af_confint.txt")
     shell:
         "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
-        +CALLER+" "+OUT_DIR+" {output.allelefreqs} {output.afdensities} {output.results}"
+        +CALLER+" "+OUT_DIR+" {output.afdensities} {output.results}"

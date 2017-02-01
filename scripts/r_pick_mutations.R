@@ -51,17 +51,17 @@ calc_af <- function(vcf, caller)
 calc_bootstrap_summary <- function(r)
 {
   af <- as.numeric(r[-c(1:4)])
-  std <- sd(af, na.rm = TRUE)
+  sd <- sd(af, na.rm = TRUE)
   med <- median(af, na.rm = TRUE)
+  cov <- if (med == 0) NA else sd/med
   lbnd <- quantile(af, 0.025, na.rm = TRUE)
   ubnd <- quantile(af, 0.975, na.rm = TRUE)
-  return(signif(c(std, med, lbnd, ubnd),3))
+  return(signif(c(cov, sd, med, lbnd, ubnd),3))
 }
 
 draw_allelefreq_densities <- function(r)
 {
   af <- as.numeric(r[-c(1:4)])
-  std <- sd(af, na.rm = TRUE)
   med <- median(af, na.rm = TRUE)
   lbnd <- quantile(af, 0.025, na.rm = TRUE)
   ubnd <- quantile(af, 0.975, na.rm = TRUE)
@@ -81,13 +81,15 @@ aflist <- lapply(vcfs, calc_af, caller)
 aflist <- Map(function(x, i) setNames(x, c('CHR', 'POS', 'REF', 'ALT', paste('VAF', i, sep = '.'))),
               aflist, seq_along(aflist))
 afmtrx <- Reduce(function(...) merge(..., by = c('CHR', 'POS', 'REF', 'ALT'),
-                                  all = TRUE), aflist)
-afmtrx <- afmtrx[!(rowSums(is.na(afmtrx)) > sum(grepl("VAF", names(afmtrx))) - 6),]
+                                     all = TRUE), aflist)
+afmtrx[is.na(afmtrx)] <- 0
 afsumm <- apply(afmtrx, 1, calc_bootstrap_summary)
 afsumm <- cbind(afmtrx[,1:4],t(afsumm))
 colnames(afsumm) <- c('CHR', 'POS', 'REF', 'ALT',
-                      'standart.dev', 'median.allele.freq', 'lower.bound', 'upper.bound')
+                      'coef.variation', 'standart.dev', 'median.allele.freq', 'lower.bound', 'upper.bound')
 afsumm <- afsumm[order(afsumm[,5]),]
+#filtering out mutations with median=0 (median=0 => coef.variation is NA)
+afsumm <- afsumm[!is.na(afsumm$coef.variation),]
 afsumm <- afsumm[round(seq(1, nrow(afsumm), by = nrow(afsumm)/nmuts)),]
 
 pdf(args[3])
