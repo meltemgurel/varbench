@@ -2,7 +2,7 @@
 **Varbench** is a ....
 
 ## Prerequisites
-To run **Varbench** you need the following software installed:
+To run **Varbench** you need the following software to be installed:
 - Python
 - Snakemake
 - Bamsurgeon
