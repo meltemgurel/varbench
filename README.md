@@ -6,13 +6,13 @@ To run **Varbench** you need the following software installed:
 - Python
 - Snakemake
 - Bamsurgeon
--- Pysam
--- BWA
--- SAMtools
--- BCFtools
--- Velvet
--- Picard tools
--- Exonerate
+    - Pysam
+    - BWA
+    - SAMtools
+    - BCFtools
+    - Velvet
+    - Picard tools
+    - Exonerate
 
 ## Installing dependencies
 **Varbench** uses the workflow system Snakemake. Snakemake follows the GNU Make paradigm. With a Python 3 setup, installation of Snakemake can be performed by issuing
@@ -45,7 +45,7 @@ $ cd path/to/workdir
 ### pipe:Simulating somatic mutations
 After you edit ```config.p1.yml``` to specify the
 - path to the reference genome file (```REFERENCE```),
-- path to the paired-end fastq read files (```SAMPLE1``` and ```SAMPLE2```),
+- path to the paired-end .fastq read files (```SAMPLE1``` and ```SAMPLE2```),
 - minimum and maximum coverage depth to filter reads (```MINDEPTH``` and ```MAXDEPTH```, default is 10 and 10K),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
 - number of processes to split into (```NTHREADS```)
@@ -69,7 +69,7 @@ snakemake --snakefile pipe-pick-best-variant-caller --configfile config.p2.yml
 ```
 in your terminal.
 ### pipe:Calling somatic mutations with allele frequency confidence intervals
-Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.p3.yml``` configuration file. Example setups are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline.
+Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.p3.yml``` configuration file. Example setup files are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline.
 Also specify the
 - path to the reference genome file (```REFERENCE```),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
