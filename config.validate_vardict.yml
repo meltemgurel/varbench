@@ -1,0 +1,14 @@
+# Directory where the VCF files are
+VCF_DIR: 'out-compare'
+
+# Directory where intermediate files will be written.
+OUT_DIR: 'out-validate_vardict'
+
+# Variance caller (vardict, somaticsniper, mutect)
+CALLER: 'vardict'
+
+# Number of mutations to validate
+NMUTATIONS: 20
+
+# Number of cores to run on
+NTHREADS: 64
