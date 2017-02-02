@@ -1,0 +1,192 @@
+'''
+varbench::estimate - Calling somatic mutations with
+allele frequency confidence intervals
+
+Returns a list of somatic variants - called with the chosen software -
+with their interval estimates of allele frequencies
+-----------------------------------------------------------------------
+
+Requirements:
+  See environment.yml
+
+Usage:
+  snakemake \
+  	--snakefile estimate \
+  	--configfile config.estimate.yml
+'''
+
+import sys
+import pandas as pd
+from os.path import join, basename, dirname
+from snakemake.utils import R
+
+include: "scripts/functions.py"
+
+#------------------------------------------------------------------------------
+#--------------------------------------------------------------------- Globals-
+#------------------------------------------------------------------------------
+
+# Path to the reference genome.
+REFERENCE = config['REFERENCE'] if config['REFERENCE'] else sys.exit('ERROR: You must provide a reference file')
+
+# Path to the sample reads.
+NORMAL = config['NORMAL'] if config['NORMAL'] else sys.exit('ERROR: You must provide a normal BAM file')
+TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must provide a tumour BAM file')
+
+# Directory where intermediate files will be written.
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-estimate/'
+
+# Bootstrap k count
+K = 100
+
+# Variance caller
+CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
+
+# For now threads, will scale to cores
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
+
+#------------------------------------------------------------------------------
+# Step 0. Set-up: set up environment
+#
+# TODO: check for dependencies
+#------------------------------------------------------------------------------
+
+rule all:
+    input:
+        results=join(OUT_DIR, "analysis/results.txt"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
+
+#------------------------------------------------------------------------------
+# Step 1. Resampling: Resample NORMAL and TUMOUR reads
+#------------------------------------------------------------------------------
+
+# Resample normals
+rule resample_normals:
+    """Resample normals"""
+    input:
+        normal=NORMAL
+    output:
+        temp(join(OUT_DIR, "normal"))
+    message:
+        "Resampling {input.normal}"
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-resample_normals.txt")
+    shell:
+        "readCount=$(samtools view -c {input.normal}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.normal}) <(samtools view {input.normal} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
+        "touch {output}"
+
+# Resample tumours
+rule resample_tumours:
+    """Resample tumours"""
+    input:
+        tumour=TUMOUR
+    output:
+        temp(join(OUT_DIR, "tumour"))
+    message:
+        "Resampling {input.tumour}"
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-resample_tumours.txt")
+    shell:
+        "readCount=$(samtools view -c {input.tumour}); "
+        "for i in {{1.."+str(K)+"}}; "
+        "do cat <(samtools view -H {input.tumour}) <(samtools view {input.tumour} | shuf -r -n $readCount) > {output}.temp.$i.bam; done; "
+        "touch {output}"
+
+# Sort and index normals
+rule sidx_normals:
+    """Sort and index normals"""
+    input:
+        normal=join(OUT_DIR, "normal")
+    output:
+        temp(join(OUT_DIR, "snormal"))
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-sidx_normals.txt")
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
+        "touch {output}"
+
+# Sort and index tumours
+rule sidx_tumours:
+    """Sort and index tumours"""
+    input:
+        tumour=join(OUT_DIR, "tumour")
+    output:
+        temp(join(OUT_DIR, "stumour"))
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-sidx_tumours.txt")
+    shell:
+        "for i in {{1.."+str(K)+"}}; "
+        "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
+        "touch {output}"
+
+#------------------------------------------------------------------------------
+# Step 2. Variant calling: Calling somatic mutations
+#------------------------------------------------------------------------------
+
+# Call mutations
+rule call_mutations:
+    """Call mutations"""
+    input:
+        reference=REFERENCE,
+        nbam=NORMAL,
+        normal=join(OUT_DIR, "snormal"),
+        tumour=join(OUT_DIR, "stumour")
+    output:
+        temp(join(OUT_DIR, "mutations"))
+    params:
+        mindepth=10
+    message:
+        "Calling mutations with "+ CALLER
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-call_mutations.txt")
+    run:
+        shell("rm "+OUT_DIR+"/*temp*.bam")
+        shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{printf \"%s\\t%s\\n\",$1,$2}}'" +
+              " | (echo -e 'CHR\tPOS' && cat) > "+join(OUT_DIR, "covregs.bed"))
+
+        #shell("samtools depth {input.nbam} | awk '$3 > {params.mindepth} {{print $1\"\t$\"2}}' "
+        #      "| awk '{(a[$1]) ? a[$1]=$2 : b[$1]=a[$1]=$2;}END{for (i in a)print i\"\t\"b[i]\"\t\"a[i];}' "
+        #      "| sort -V > "join(OUT_DIR, "covregs.bed"))
+
+        cmd = get_caller_cmd(CALLER, input.reference, join(OUT_DIR, "covregs.bed"), OUT_DIR)
+
+        for i in range(1, K+1):
+            nbam = join(OUT_DIR, "normal."+str(i)+".bam")
+            tbam = join(OUT_DIR, "tumour."+str(i)+".bam")
+            outf = join(OUT_DIR, "mutations."+str(i)+".vcf")
+
+            if(CALLER == 'vardict'):
+                namenormal = "normal_"+str(i)
+                nametumour = "tumour_"+str(i)
+                cmdf = cmd.format(nametumour, tbam, nbam, nametumour, namenormal, outf)
+
+            elif(CALLER == 'mutect'):
+                cmdf = cmd.format(nbam, tbam, outf)
+
+            elif(CALLER == 'somaticsniper'):
+                cmdf = cmd.format(tbam, nbam, outf)
+
+            print(cmdf)
+            shell(cmdf)
+
+        shell("touch {output}")
+
+#------------------------------------------------------------------------------
+# Step 3. Summarizing: Bootstrap results for each somatic mutation
+#------------------------------------------------------------------------------
+
+# Summarize bootstrap results
+rule r_summarize_af_confint:
+    input:
+        mutations=join(OUT_DIR, "mutations")
+    output:
+        results=join(OUT_DIR, "analysis/results.txt"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
+    benchmark:
+        join(OUT_DIR, "benchmarks/estimate-r_summarize_af_confint.txt")
+    shell:
+        "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
+        +CALLER+" "+OUT_DIR+" {output.afdensities} {output.results}"

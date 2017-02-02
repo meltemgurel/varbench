@@ -1,5 +1,8 @@
 # Varbench
-**Varbench** is a ....
+
+**Varbench** is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one to call somatic variants and report the allele frequencies of these variants using interval estimates.
+
+**Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. This report briefly describes each pipeline and reports the results obtained by running them on targeted deep sequenced ctDNA data.
 
 ## Prerequisites
 To run **Varbench** you need the following software to be installed:
@@ -42,49 +45,49 @@ $ git clone https://github.com/meltemgurel/varbench.git path/to/workdir
 $ cd path/to/workdir
 ```
 
-### pipe:Simulating somatic mutations
-After you edit ```config.p1.yml``` to specify the
+### simulate: Simulating somatic mutations
+After you edit ```config.simulate.yml``` to specify the
 - path to the reference genome file (```REFERENCE```),
 - path to the paired-end .fastq read files (```SAMPLE1``` and ```SAMPLE2```),
 - minimum and maximum coverage depth to filter reads (```MINDEPTH``` and ```MAXDEPTH```, default is 10 and 10K),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
 - number of processes to split into (```NTHREADS```)
 
-run the pipeline with
+run `simulate` with
 ```sh
-snakemake --snakefile pipe-simulate-somatic-muts --configfile config.p1.yml
+snakemake --snakefile pipe-simulate-somatic-muts --configfile config.simulate.yml
 ```
-### pipe:Pick the best variant caller
-To run this pipeline you will need to install VarDict and SomaticSniper. These are already included in the conda environment. If, instead, you manually installed the dependencies please make sure to install these variant callers before you run this pipeline. More variant callers will soon be integrated into **Varbench**.
+### compare: Pick the best variant caller
+To run `compare` you will need to install VarDict and SomaticSniper. These are already included in the conda environment. If, instead, you manually installed the dependencies please make sure to install these variant callers before you run `compare`. More variant callers will soon be integrated into **Varbench**.
 
-```config.p2.yml``` needs to be edited before running the pipeline. Here the ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline, and the ```MUTATIONS``` parameter refers to the list of mutations generated again with the same pipeline.
+```config.compare.yml``` needs to be edited before running the pipeline. Here the ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline, and the ```MUTATIONS``` parameter refers to the list of mutations generated again with the same pipeline.
 You also need to submit the
 - path to the reference genome file (```REFERENCE```),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
 - number of processes to split into (```NTHREADS```)
 
-To run the pipeline issue
+To run `compare` issue
 ```sh
-snakemake --snakefile pipe-pick-best-variant-caller --configfile config.p2.yml
+snakemake --snakefile pipe-pick-best-variant-caller --configfile config.compare.yml
 ```
 in your terminal.
-### pipe:Calling somatic mutations with allele frequency confidence intervals
-Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.p3.yml``` configuration file. Example setup files are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline.
+### estimate: Calling somatic mutations with allele frequency confidence intervals
+Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.estimate.yml``` configuration file. Example setup files are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline.
 Also specify the
 - path to the reference genome file (```REFERENCE```),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
 - number of processes to split into (```NTHREADS```)
 
-The pipeline can then be executed with:
+`estimate` can then be executed with:
 ```sh
-snakemake --snakefile pipe-call-muts-with-confint --configfile config.p3.yml
+snakemake --snakefile pipe-call-muts-with-confint --configfile config.estimate.yml
 ```
-### pipe:Pick mutations for validation
+### validate: Pick mutations for validation
 When you create .VCF files with either ```pipe-pick-best-variant-caller``` or ```pipe-call-muts-with-confint``` you can run
 ```sh
-snakemake --snakefile pipe-pick-muts-to-validate --configfile config.p4.yml
+snakemake --snakefile pipe-pick-muts-to-validate --configfile config.validate.yml
 ```
-to receive a list of mutations you should validate for your analysis. The ```VCF_DIR``` parameter in the ```config.p4.yml``` should point to the .VCF files and ```NMUTATIONS``` refers to the number of mutations you wish to validate.
+to receive a list of mutations you should validate for your analysis. The ```VCF_DIR``` parameter in the ```config.validate.yml``` should point to the .VCF files and ```NMUTATIONS``` refers to the number of mutations you wish to validate.
 Other required fields are the
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
 - the variant caller used to generate the .VCF files (```CALLER```)

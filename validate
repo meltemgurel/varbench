@@ -1,0 +1,69 @@
+'''
+varbench::validate - Pick mutations for validation
+
+Returns a list of mutations to validate the chosen variant caller's accuracy.
+The returned list comprises `NMUTATIONS` number of mutations that were picked
+uniformly among all the called mutations after ordering them
+by their coefficient of variation.
+-----------------------------------------------------------------------
+
+Requirements:
+  See environment.yml
+
+Usage:
+  snakemake \
+  	--snakefile validate \
+  	--configfile config.validate.yml
+'''
+
+import sys
+from os.path import join, basename, dirname
+from snakemake.utils import R
+
+include: "scripts/functions.py"
+
+#------------------------------------------------------------------------------
+#--------------------------------------------------------------------- Globals-
+#------------------------------------------------------------------------------
+
+# Directory where the VCF files are.
+VCF_DIR = config['VCF_DIR'] if config['VCF_DIR'] else 'out-compare/'
+
+# Directory where intermediate files will be written.
+OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-validate/'
+
+# Variance caller
+CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
+
+# Number of mutations to validate
+NMUTATIONS = config['NMUTATIONS'] if config['NMUTATIONS'] else 20
+
+# For now threads, will scale to cores
+NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
+
+#------------------------------------------------------------------------------
+# Step 0. Set-up: set up environment
+#------------------------------------------------------------------------------
+
+rule all:
+    input:
+        results=join(OUT_DIR, "analysis/results.txt"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
+
+#------------------------------------------------------------------------------
+# Step 1. Pick mutations
+#------------------------------------------------------------------------------
+
+# Pick the mutations to be validated
+rule pick_mutations:
+    input:
+        vcfs= expand(join(VCF_DIR, "mutations.{caller}.{replicate}.vcf"),
+                     caller=CALLER, replicate=range(1, 101))
+    output:
+        results=join(OUT_DIR, "analysis/results.txt"),
+        afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
+    benchmark:
+        join(OUT_DIR, "benchmarks/validate-pick_mutations.txt")
+    shell:
+        "Rscript --vanilla scripts/r_pick_mutations.R {input.vcfs} "+CALLER+" "
+        +str(NMUTATIONS)+" {output.afdensities} {output.results}"
