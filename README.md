@@ -1,6 +1,6 @@
 # Varbench
 
-**Varbench** is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one to call somatic variants and report the allele frequencies of these variants using interval estimates.
+**Varbench** is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one to call somatic variants and report the allele frequencies of these variants using estimate interval.
 
 **Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. This report briefly describes each pipeline and reports the results obtained by running them on targeted deep sequenced ctDNA data.
 
@@ -55,12 +55,12 @@ After you edit ```config.simulate.yml``` to specify the
 
 run `simulate` with
 ```sh
-snakemake --snakefile pipe-simulate-somatic-muts --configfile config.simulate.yml
+snakemake --snakefile simulate --configfile config.simulate.yml
 ```
 ### compare: Pick the best variant caller
 To run `compare` you will need to install VarDict and SomaticSniper. These are already included in the conda environment. If, instead, you manually installed the dependencies please make sure to install these variant callers before you run `compare`. More variant callers will soon be integrated into **Varbench**.
 
-```config.compare.yml``` needs to be edited before running the pipeline. Here the ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline, and the ```MUTATIONS``` parameter refers to the list of mutations generated again with the same pipeline.
+```config.compare.yml``` needs to be edited before running the pipeline. Here the ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```simulate``` pipeline, and the ```MUTATIONS``` parameter refers to the list of mutations generated again with the same pipeline.
 You also need to submit the
 - path to the reference genome file (```REFERENCE```),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
@@ -68,11 +68,11 @@ You also need to submit the
 
 To run `compare` issue
 ```sh
-snakemake --snakefile pipe-pick-best-variant-caller --configfile config.compare.yml
+snakemake --snakefile compare --configfile config.compare.yml
 ```
 in your terminal.
 ### estimate: Calling somatic mutations with allele frequency confidence intervals
-Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.estimate.yml``` configuration file. Example setup files are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```pipe-simulate-somatic-muts``` pipeline.
+Requires at least one of VarDict or SomaticSniper to be installed. And you must specify either 'vardict' or 'somaticsniper' as the preferred ```CALLER``` in the ```config.estimate.yml``` configuration file. Example setup files are provided in the root directory: ```config.p3_vardict.yml``` and ```config.p3_somaticsniper.yml```. The ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```simulate``` pipeline.
 Also specify the
 - path to the reference genome file (```REFERENCE```),
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
@@ -80,12 +80,12 @@ Also specify the
 
 `estimate` can then be executed with:
 ```sh
-snakemake --snakefile pipe-call-muts-with-confint --configfile config.estimate.yml
+snakemake --snakefile estimate --configfile config.estimate.yml
 ```
 ### validate: Pick mutations for validation
-When you create .VCF files with either ```pipe-pick-best-variant-caller``` or ```pipe-call-muts-with-confint``` you can run
+When you create .VCF files with either ```compare``` or ```estimate``` you can run
 ```sh
-snakemake --snakefile pipe-pick-muts-to-validate --configfile config.validate.yml
+snakemake --snakefile validate --configfile config.validate.yml
 ```
 to receive a list of mutations you should validate for your analysis. The ```VCF_DIR``` parameter in the ```config.validate.yml``` should point to the .VCF files and ```NMUTATIONS``` refers to the number of mutations you wish to validate.
 Other required fields are the
