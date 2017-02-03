@@ -124,7 +124,7 @@ $(document).ready(function () {
 </div>
 
 
-<p><strong>Varbench</strong> is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one to call somatic variants, and report the allele frequencies of these variants using estimate intervals.</p>
+<p><strong>Varbench</strong> is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one, and report the allele frequencies of the called variants using estimate intervals.</p>
 <p><strong>Varbench</strong> comprises four pipelines, namely <strong>simulate</strong>, <strong>compare</strong>, <strong>estimate</strong> and <strong>validate</strong>. This report briefly describes each pipeline and reports the results obtained by running them on targeted deep sequencing ctDNA data.</p>
 <div id="simulate-simulating-somatic-mutations" class="section level1">
 <h1><em>simulate</em>: Simulating somatic mutations</h1>
@@ -278,8 +278,8 @@ Figure 3: Actual allele frequency histogram
 <h3>Output</h3>
 <pre class="r"><code># reports
 list.files(&quot;run1/simulate/&quot;, pattern = &quot;*.txt&quot;, full.names = TRUE)</code></pre>
-<pre><code>## [1] &quot;run1/simulate//readStats.txt&quot;                  
-## [2] &quot;run1/simulate//report.txt&quot;                     
+<pre><code>## [1] &quot;run1/simulate//readStats.txt&quot;
+## [2] &quot;run1/simulate//report.txt&quot;
 ## [3] &quot;run1/simulate//SLX-10378.s_1.r_1.mutations.txt&quot;
 ## [4] &quot;run1/simulate//SLX-10378.s_1.r_1.originals.txt&quot;</code></pre>
 <pre class="r"><code># normal and tumor samples
@@ -399,17 +399,17 @@ list.files(&quot;run1/compare/analysis&quot;, pattern = &quot;*.txt&quot;, full.
 <pre><code>## [1] &quot;run1/compare/analysis/results.txt&quot;</code></pre>
 <pre class="r"><code># plots
 list.files(&quot;run1/compare/analysis&quot;, pattern = &quot;*.pdf&quot;, full.names = TRUE)</code></pre>
-<pre><code>##  [1] &quot;run1/compare/analysis/afcorr_somaticsniper.pdf&quot;   
-##  [2] &quot;run1/compare/analysis/afcorr_vardict.pdf&quot;         
-##  [3] &quot;run1/compare/analysis/afdist_somaticsniper.pdf&quot;   
-##  [4] &quot;run1/compare/analysis/afdist_vardict.pdf&quot;         
-##  [5] &quot;run1/compare/analysis/fscore_somaticsniper.pdf&quot;   
-##  [6] &quot;run1/compare/analysis/fscore_vardict.pdf&quot;         
+<pre><code>##  [1] &quot;run1/compare/analysis/afcorr_somaticsniper.pdf&quot;
+##  [2] &quot;run1/compare/analysis/afcorr_vardict.pdf&quot;
+##  [3] &quot;run1/compare/analysis/afdist_somaticsniper.pdf&quot;
+##  [4] &quot;run1/compare/analysis/afdist_vardict.pdf&quot;
+##  [5] &quot;run1/compare/analysis/fscore_somaticsniper.pdf&quot;
+##  [6] &quot;run1/compare/analysis/fscore_vardict.pdf&quot;
 ##  [7] &quot;run1/compare/analysis/precision_somaticsniper.pdf&quot;
-##  [8] &quot;run1/compare/analysis/precision_vardict.pdf&quot;      
-##  [9] &quot;run1/compare/analysis/r2_somaticsniper.pdf&quot;       
-## [10] &quot;run1/compare/analysis/r2_vardict.pdf&quot;             
-## [11] &quot;run1/compare/analysis/recall_somaticsniper.pdf&quot;   
+##  [8] &quot;run1/compare/analysis/precision_vardict.pdf&quot;
+##  [9] &quot;run1/compare/analysis/r2_somaticsniper.pdf&quot;
+## [10] &quot;run1/compare/analysis/r2_vardict.pdf&quot;
+## [11] &quot;run1/compare/analysis/recall_somaticsniper.pdf&quot;
 ## [12] &quot;run1/compare/analysis/recall_vardict.pdf&quot;</code></pre>
 </div>
 </div>
@@ -442,7 +442,7 @@ Figure 9: estimate DAG
 </div>
 <div id="bootstrap-summary" class="section level3">
 <h3>Bootstrap Summary</h3>
-<pre class="r"><code>mutations.vardict &lt;- droplevels(subset(read.table(&quot;run1/estimate_vardict/analysis/results.txt&quot;, 
+<pre class="r"><code>mutations.vardict &lt;- droplevels(subset(read.table(&quot;run1/estimate_vardict/analysis/results.txt&quot;,
     header = TRUE), median.allele.freq &gt; 0))
 head(mutations.vardict)</code></pre>
 <pre><code>##      CHR      POS REF ALT median.allele.freq lower.bound upper.bound
@@ -452,7 +452,7 @@ head(mutations.vardict)</code></pre>
 ## 7  chr17  7572911   C   T            0.00116     0.00000     0.00193
 ## 9  chr17  7572913   A   G            0.00234     0.00149     0.00321
 ## 10 chr17  7572915   A   G            0.00369     0.00257     0.00507</code></pre>
-<pre class="r"><code>mutations.somaticsniper &lt;- droplevels(subset(read.table(&quot;run1/estimate_somaticsniper/analysis/results.txt&quot;, 
+<pre class="r"><code>mutations.somaticsniper &lt;- droplevels(subset(read.table(&quot;run1/estimate_somaticsniper/analysis/results.txt&quot;,
     header = TRUE), median.allele.freq &gt; 0))
 head(mutations.somaticsniper)</code></pre>
 <pre><code>##      CHR      POS REF ALT median.allele.freq lower.bound upper.bound
@@ -507,7 +507,7 @@ Figure 10: validate DAG
 <div id="output---list-of-mutations-to-validate-n20" class="section level3">
 <h3>Output - List of mutations to validate (n=20)</h3>
 <p><strong>Vardict</strong></p>
-<pre class="r"><code>mutations.vardict &lt;- read.table(&quot;run1/validate_vardict/analysis/results.txt&quot;, 
+<pre class="r"><code>mutations.vardict &lt;- read.table(&quot;run1/validate_vardict/analysis/results.txt&quot;,
     header = TRUE)
 mutations.vardict</code></pre>
 <pre><code>##      CHR     POS REF ALT coef.variation standart.dev median.allele.freq
@@ -553,7 +553,7 @@ mutations.vardict</code></pre>
 ## 19    0.000000     0.00141
 ## 20    0.000000     0.00339</code></pre>
 <p><strong>SomaticSniper</strong></p>
-<pre class="r"><code>mutations.somaticsniper &lt;- read.table(&quot;run1/validate_somaticsniper/analysis/results.txt&quot;, 
+<pre class="r"><code>mutations.somaticsniper &lt;- read.table(&quot;run1/validate_somaticsniper/analysis/results.txt&quot;,
     header = TRUE)
 mutations.somaticsniper</code></pre>
 <pre><code>##      CHR     POS REF ALT coef.variation standart.dev median.allele.freq
