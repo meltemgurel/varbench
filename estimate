@@ -4,7 +4,6 @@ allele frequency confidence intervals
 
 Returns a list of somatic variants - called with the chosen software -
 with their interval estimates of allele frequencies
------------------------------------------------------------------------
 
 Requirements:
   See environment.yml
@@ -13,6 +12,12 @@ Usage:
   snakemake \
   	--snakefile estimate \
   	--configfile config.estimate.yml
+
+AUTHOR
+       Written by Meltem Gürel, University of Cambridge, UK
+
+REPORTING BUGS
+       Report bugs to meltem.gurel\@cruk.cam.ac.uk
 '''
 
 import sys
@@ -20,7 +25,7 @@ import pandas as pd
 from os.path import join, basename, dirname
 from snakemake.utils import R
 
-include: "scripts/functions.py"
+include: "scripts/utils.py"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-
@@ -179,14 +184,14 @@ rule call_mutations:
 #------------------------------------------------------------------------------
 
 # Summarize bootstrap results
-rule r_summarize_af_confint:
+rule r_calculate_af_intervals:
     input:
         mutations=join(OUT_DIR, "mutations")
     output:
         results=join(OUT_DIR, "analysis/results.txt"),
         afdensities=join(OUT_DIR, "analysis/afdensities.pdf")
     benchmark:
-        join(OUT_DIR, "benchmarks/estimate-r_summarize_af_confint.txt")
+        join(OUT_DIR, "benchmarks/estimate-r_calculate_af_intervals.txt")
     shell:
-        "Rscript --vanilla scripts/r_summarize_af_confint.R {input.mutations} "
+        "Rscript --vanilla scripts/r_calculate_af_intervals.R {input.mutations} "
         +CALLER+" "+OUT_DIR+" {output.afdensities} {output.results}"

@@ -5,7 +5,6 @@ Returns a list of mutations to validate the chosen variant caller's accuracy.
 The returned list comprises `NMUTATIONS` number of mutations that were picked
 uniformly among all the called mutations after ordering them
 by their coefficient of variation.
------------------------------------------------------------------------
 
 Requirements:
   See environment.yml
@@ -14,13 +13,19 @@ Usage:
   snakemake \
   	--snakefile validate \
   	--configfile config.validate.yml
+
+AUTHOR
+       Written by Meltem Gürel, University of Cambridge, UK
+
+REPORTING BUGS
+       Report bugs to meltem.gurel\@cruk.cam.ac.uk
 '''
 
 import sys
 from os.path import join, basename, dirname
 from snakemake.utils import R
 
-include: "scripts/functions.py"
+include: "scripts/utils.py"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-

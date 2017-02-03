@@ -4,8 +4,6 @@ varbench::simulate - Simulating somatic mutations
 Given a sample .bam file and a refrence genome 'simulate' will
 induce somatic mutations to create a normal-tumor sample pair.
 
------------------------------------------------------------------------
-
 Requirements:
   See environment.yml
 
@@ -13,6 +11,12 @@ Usage:
   snakemake \
   	--snakefile simulate \
   	--configfile config.simulate.yml
+
+AUTHOR
+       Written by Meltem Gürel, University of Cambridge, UK
+
+REPORTING BUGS
+       Report bugs to meltem.gurel\@cruk.cam.ac.uk
 '''
 
 import json
@@ -22,7 +26,7 @@ from os.path import join, basename, dirname
 from setuptools import setup, find_packages
 from snakemake.utils import R
 
-include: "scripts/functions.py"
+include: "scripts/utils.py"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-
@@ -50,8 +54,6 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 
 #------------------------------------------------------------------------------
 # Step 0. Set-up: set up environment
-#
-# TODO: update the final rule
 #------------------------------------------------------------------------------
 
 # Check for dependencies

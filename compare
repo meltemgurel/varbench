@@ -3,7 +3,6 @@ varbench::compare - Pick the ideal variant caller with bootstrap
 
 Picks the best somatic variant caller for a given dataset by
 comparing their $R^2$ for called and actual allele frequencies.
------------------------------------------------------------------------
 
 Requirements:
   See environment.yml
@@ -12,6 +11,12 @@ Usage:
   snakemake \
   	--snakefile compare \
   	--configfile config.compare.yml
+
+AUTHOR
+       Written by Meltem Gürel, University of Cambridge, UK
+
+REPORTING BUGS
+       Report bugs to meltem.gurel\@cruk.cam.ac.uk
 '''
 
 import sys
@@ -19,7 +24,7 @@ import pandas as pd
 from os.path import join, basename, dirname
 from snakemake.utils import R
 
-include: "scripts/functions.py"
+include: "scripts/utils.py"
 
 #------------------------------------------------------------------------------
 #--------------------------------------------------------------------- Globals-
@@ -177,7 +182,7 @@ rule r_calculate_quality_metrics:
     output:
         results=join(OUT_DIR, "analysis/results.txt")
     benchmark:
-        join(OUT_DIR, "benchmarks/compare-r_calcualte_quality_metrics.txt")
+        join(OUT_DIR, "benchmarks/compare-r_evaluate_caller.txt")
     run:
         for caller in CALLERS:
             pdf_afdist = join(OUT_DIR, "analysis/afdist_"+caller+".pdf")
@@ -187,7 +192,7 @@ rule r_calculate_quality_metrics:
             pdf_fscore = join(OUT_DIR, "analysis/fscore_"+caller+".pdf")
             pdf_r2 = join(OUT_DIR, "analysis/r2_"+caller+".pdf")
 
-            shell("Rscript --vanilla scripts/r_calculate_quality_metrics.R {input.mutations} "
+            shell("Rscript --vanilla scripts/r_evaluate_caller.R {input.mutations} "
                     +caller+" {input.mutationl} "+OUT_DIR+" "+pdf_afdist+" "
                     +pdf_afcorr+" "+pdf_precision+" "+pdf_recall+" "+pdf_fscore+" "+pdf_r2
                     +" {output.results}")
