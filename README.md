@@ -2,7 +2,7 @@
 
 **Varbench** is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one, and report the allele frequencies of the called variants using estimate intervals.
 
-**Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. `doc/report.html` describes each pipeline and reports the results obtained by running them on targeted deep sequenced ctDNA data.
+**Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. `doc/report.html` describes each pipeline and reports the results obtained by running them on targeted deep sequencing ctDNA data.
 
 ## Prerequisites
 To run **Varbench** you need the following software to be installed:
