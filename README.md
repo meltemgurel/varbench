@@ -90,5 +90,5 @@ snakemake --snakefile validate --configfile config.validate.yml
 to receive a list of mutations you should validate for your analysis. The ```VCF_DIR``` parameter in the ```config.validate.yml``` should point to the .VCF files and ```NMUTATIONS``` refers to the number of mutations you wish to validate.
 Other required fields are the
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
-- the variant caller used to generate the .VCF files (```CALLER```)
+- variant caller used to generate the .VCF files (```CALLER```)
 - number of processes to split into (```NTHREADS```)
