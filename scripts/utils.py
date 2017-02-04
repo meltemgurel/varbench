@@ -23,9 +23,8 @@ def check_bamsurgeon():
     return False
 
 # Checks for dependencies before running simulate
-# Attempts ot install Exonerate if it's not installed
+# Attempts to install Exonerate if it's not installed
 def check_dependencies():
-
     if not check_exonerate():
         url="https://github.com/adamewing/exonerate.git"
         os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; autoreconf -i;"
