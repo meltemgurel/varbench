@@ -57,7 +57,7 @@ NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
 #------------------------------------------------------------------------------
 
 # Check for dependencies
-setup()
+check_dependencies()
 
 rule all:
     input:
