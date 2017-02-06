@@ -2,7 +2,7 @@
 
 **Varbench** is a suite of tools developed to compare somatic variant callers for targeted deep sequencing data, run the best performing one, and report the allele frequencies of the called variants using estimate intervals.
 
-**Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. This report briefly describes each pipeline and reports the results obtained by running them on targeted deep sequenced ctDNA data.
+**Varbench** comprises four pipelines, namely **simulate**, **compare**, **estimate** and **validate**. `doc/report.html` describes each pipeline and reports the results obtained by running them on targeted deep sequencing ctDNA data.
 
 ## Prerequisites
 To run **Varbench** you need the following software to be installed:
@@ -90,5 +90,5 @@ snakemake --snakefile validate --configfile config.validate.yml
 to receive a list of mutations you should validate for your analysis. The ```VCF_DIR``` parameter in the ```config.validate.yml``` should point to the .VCF files and ```NMUTATIONS``` refers to the number of mutations you wish to validate.
 Other required fields are the
 - directory to store the pipeline outputs (```OUT_DIR```, will be created if it doesn't exist already),
-- the variant caller used to generate the .VCF files (```CALLER```)
+- variant caller used to generate the .VCF files (```CALLER```)
 - number of processes to split into (```NTHREADS```)
