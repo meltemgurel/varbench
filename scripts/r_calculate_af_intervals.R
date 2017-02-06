@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 nucs = c('A','C','G','T')
 
-source("utils.R")
+source("scripts/utils.R")
 
 calculate_af_interval <- function(r)
 {

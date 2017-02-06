@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 nucs = c('A','C','G','T')
 
-source("utils.R")
+source("scripts/utils.R")
 
 plot_af_corr <- function(actual, predicted, r2, vcf, caller)
 {

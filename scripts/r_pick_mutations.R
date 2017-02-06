@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 nucs = c('A','C','G','T')
 
-source("utils.R")
+source("scripts/utils.R")
 
 calculate_af_interval <- function(r)
 {
@@ -49,7 +49,7 @@ afsumm <- cbind(afmatrix[,1:4],t(afsumm))
 colnames(afsumm) <- c('CHR', 'POS', 'REF', 'ALT',
                       'coef.variation', 'standart.dev', 'median.allele.freq',
                       'lower.bound', 'upper.bound')
-                      
+
 afsumm <- afsumm[order(afsumm[,5]),]
 
 #filtering out mutations with median=0 (median=0 => coef.variation is NA)
