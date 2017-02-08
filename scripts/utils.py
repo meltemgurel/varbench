@@ -42,6 +42,8 @@ def get_caller_cmd(caller, ref, muts, outdir):
         return cmd_mutect(ref, muts, outdir)
     elif caller == 'somaticsniper':
         return cmd_somaticsniper(ref)
+    elif caller == 'strelka':
+        return cmd_strelka(ref, outdir)
 
 # Returns the execution command for Vardict
 def cmd_vardict(ref, muts, outdir):
@@ -71,3 +73,13 @@ def cmd_mutect(ref, muts, outdir):
 # Returns the execution command for Somatic Sniper
 def cmd_somaticsniper(ref):
     return "bam-somaticsniper -F vcf -f "+ref+" {} {} {}"
+
+# Returns the execution command for Strelka
+def cmd_strelka(ref, outdir):
+    os.system('')
+    outdir = join(outdir, "strelka")
+    return 'configureStrelkaWorkflow.pl --ref '+ref+ \
+           '--config config.eland.ini ' \
+           '--normal {} --tumor {} --out '+outdir+ \
+           '; make -j 8 -C '+outdir+'; mv '+join(outdir, "results/passed.somatic.snvs.vcf")+ ' {}; ' \
+           'rm -r strelka/'

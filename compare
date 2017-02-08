@@ -44,10 +44,10 @@ MUTATIONLIST = config['MUTATIONS'] if config['MUTATIONS'] else sys.exit('ERROR: 
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-compare/'
 
 # Bootstrap k count
-K = 100
+K = 10
 
 # Variance caller
-CALLERS = ['vardict','somaticsniper']
+CALLERS = ['strelka']
 
 # For now threads, will scale to cores
 NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
@@ -163,7 +163,10 @@ rule call_mutations:
                     cmdf = cmd.format(nbam, tbam, outf)
 
                 elif(caller == 'somaticsniper'):
-                    cmdf = cmd.format(tbam, nbam, outf)
+                    cmdf = cmd.format(nbam, tbam, outf)
+
+                elif(caller == 'strelka'):
+                    cmdf = cmd.format(nbam, tbam, outf)
 
                 print(cmdf)
                 shell(cmdf)

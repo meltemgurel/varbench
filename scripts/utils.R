@@ -34,6 +34,24 @@ process_vcf_SomaticSniper <- function(clist)
   return(clist)
 }
 
+# Processes vcf files generated with Strelka:
+# Calculates allele frequency
+process_vcf_Strelka <- function(clist)
+{
+  colnames(clist) <- c('CHR', 'POS', 'ID', 'REF', 'ALT', 'QUAL',
+                       'FILTER', 'INFO', 'FORMAT', 'NORMAL', 'TUMOR')
+
+  clist <- clist[, c('CHR', 'POS', 'REF', 'ALT', 'TUMOR', 'NORMAL')]
+
+  af <- t(apply(apply(sapply(strsplit(clist$TUMOR, ":"), '[')[5:8,], 2,
+                      function(x) sapply(strsplit(x, ','), '[')[1,]), 2,
+                function(x) signif(as.integer(x)/sum(as.integer(x)),3)))
+
+  colnames(af) <- nucs
+  clist$VAF <- af[cbind(seq_along(clist$ALT), match(clist$ALT,colnames(af)))]
+  return(clist)
+}
+
 # Processes vcf files generated with Mutect:
 # Keeps only somatic mutations and calculates allele frequency
 process_vcf_Mutect <- function(clist)
@@ -57,6 +75,10 @@ attach_af_to_dataframe <- function(vcf, caller)
   else if(caller == 'mutect')
   {
     clist <- process_vcf_Mutect(clist)
+  }
+  else if(caller == 'strelka')
+  {
+    clist <- process_vcf_Strelka(clist)
   }
   return(clist[,c('CHR', 'POS', 'REF', 'ALT', 'VAF')])
 }
