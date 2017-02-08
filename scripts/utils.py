@@ -79,7 +79,7 @@ def cmd_strelka(ref, outdir):
     os.system('')
     outdir = join(outdir, "strelka")
     return 'configureStrelkaWorkflow.pl --ref '+ref+ \
-           '--config config.eland.ini ' \
+           '--config config/config.eland.ini ' \
            '--normal {} --tumor {} --out '+outdir+ \
            '; make -j 8 -C '+outdir+'; mv '+join(outdir, "results/passed.somatic.snvs.vcf")+ ' {}; ' \
            'rm -r strelka/'
