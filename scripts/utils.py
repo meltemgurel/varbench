@@ -22,7 +22,7 @@ def check_bamsurgeon():
     return False
 
 # Checks for dependencies before running simulate
-# Attempts ot install Exonerate if it's not installed
+# Attempts to install Exonerate if it's not installed
 def check_dependencies():
     if not check_exonerate():
         url="https://github.com/adamewing/exonerate.git"
@@ -79,7 +79,7 @@ def cmd_strelka(ref, outdir):
     os.system('')
     outdir = join(outdir, "strelka")
     return 'configureStrelkaWorkflow.pl --ref '+ref+ \
-           '--config config/config.eland.ini ' \
+           ' --config config/config.eland.ini ' \
            '--normal {} --tumor {} --out '+outdir+ \
            '; make -j 8 -C '+outdir+'; mv '+join(outdir, "results/passed.somatic.snvs.vcf")+ ' {}; ' \
-           'rm -r strelka/'
+           'rm -r '+outdir

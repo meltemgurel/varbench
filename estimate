@@ -42,7 +42,7 @@ TUMOUR = config['TUMOUR'] if config['TUMOUR'] else sys.exit('ERROR: You must pro
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-estimate/'
 
 # Bootstrap k count
-K = 100
+K = 10
 
 # Variance caller
 CALLER = config['CALLER'] if config['CALLER'] else 'vardict'
@@ -174,7 +174,7 @@ rule call_mutations:
             elif(CALLER == 'somaticsniper'):
                 cmdf = cmd.format(tbam, nbam, outf)
 
-            elif(caller == 'strelka'):
+            elif(CALLER == 'strelka'):
                 cmdf = cmd.format(nbam, tbam, outf)
 
             print(cmdf)

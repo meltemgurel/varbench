@@ -44,10 +44,10 @@ MUTATIONLIST = config['MUTATIONS'] if config['MUTATIONS'] else sys.exit('ERROR: 
 OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-compare/'
 
 # Bootstrap k count
-K = 10
+K = 100
 
 # Variance caller
-CALLERS = ['strelka']
+CALLERS = ['vardict','somaticsniper','strelka']
 
 # For now threads, will scale to cores
 NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64

@@ -4,7 +4,7 @@ VCF_DIR: 'out-compare'
 # Directory where intermediate files will be written.
 OUT_DIR: 'out-validate_vardict'
 
-# Variance caller (vardict, somaticsniper, mutect)
+# Variance caller (vardict, somaticsniper, strelka)
 CALLER: 'vardict'
 
 # Number of mutations to validate

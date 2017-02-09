@@ -6,10 +6,10 @@ NORMAL: 'out-simulate/SLX-10378.s_1.r_1.normal.bam'
 TUMOUR: 'out-simulate/SLX-10378.s_1.r_1.tumour.bam'
 
 # Directory where intermediate files will be written.
-OUT_DIR: 'out-estimate_somaticsniper'
+OUT_DIR: 'out-estimate_strelka'
 
 # Variance caller (vardict, somaticsniper, strelka)
-CALLER: 'somaticsniper'
+CALLER: 'strelka'
 
 # Number of cores to run on
 NTHREADS: 64

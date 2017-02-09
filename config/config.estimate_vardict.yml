@@ -8,7 +8,7 @@ TUMOUR: 'out-simulate/SLX-10378.s_1.r_1.tumour.bam'
 # Directory where intermediate files will be written.
 OUT_DIR: 'out-estimate_vardict'
 
-# Variance caller (vardict, somaticsniper, mutect)
+# Variance caller (vardict, somaticsniper, strelka)
 CALLER: 'vardict'
 
 # Number of cores to run on
