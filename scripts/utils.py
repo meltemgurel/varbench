@@ -26,9 +26,11 @@ def check_bamsurgeon():
 def check_dependencies():
     if not check_exonerate():
         url="https://github.com/adamewing/exonerate.git"
-        os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; autoreconf -i;"
-        " ./configure && make && make check && make install")
-    if not check_bamsurgeon(): sys.exit('Dependency problem: bamsurgeon not found')
+        os.system("git clone "+url+"; cd exonerate; git checkout v2.4.0; "
+        "touch aclocal.m4 configure Makefile.am && Makefile.in "
+        "&& ./configure && make && make install")
+    if not check_bamsurgeon():
+        sys.exit('Dependency problem: bamsurgeon not found')
 
 # Returns file names for labelling
 def get_name(x):
