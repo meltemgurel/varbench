@@ -1,7 +1,6 @@
 name: varbench-env
 channels: !!python/tuple
-- !!python/unicode
-  'defaults'
+- defaults
 dependencies:
 - bioconda::bcftools=1.3.1=1
 - bioconda::bwa=0.7.15=0
@@ -12,6 +11,7 @@ dependencies:
 - bioconda::samtools=1.3.1=5
 - bioconda::somatic-sniper=1.0.5.0=0
 - bioconda::vardict-java=1.4.8=0
+- bioconda::varscan=2.4.2=0
 - bioconda::velvet=1.2.10=1
 - libgcc=5.2.0=0
 - mkl=2017.0.1=0
@@ -29,5 +29,7 @@ dependencies:
 - tk=8.5.18=0
 - wheel=0.29.0=py27_0
 - zlib=1.2.8=3
-prefix: /Users/gurel01/anaconda2/envs/varbench-env
+- pip:
+  - bamsurgeon==1.0
+prefix: /home/db544/anaconda3/envs/varbench-env
 
