@@ -1,5 +1,5 @@
 '''
-varbench::compare - Pick the ideal variant caller with bootstrap
+varbench::compare - Pick the best variant caller with bootstrap
 
 Picks the best somatic variant caller for a given dataset by
 comparing their $R^2$ for called and actual allele frequencies.

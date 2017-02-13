@@ -24,7 +24,7 @@ def get_allele_frequencies(bam, chr, pos):
     bam_file.close()
     total = sum(base_freq.itervalues(), 0.0)
     freqs = {k: float('%.3g' % (v / total)) for k, v in base_freq.iteritems()}
-    print freqs
+    print(freqs)
     return total, freqs
 
 in_df  = pandas.DataFrame.from_csv(sys.argv[1], sep='\t',
