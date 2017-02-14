@@ -47,7 +47,7 @@ OUT_DIR = config['OUT_DIR'] if config['OUT_DIR'] else 'out-compare/'
 K = 100
 
 # Variance caller
-CALLERS = ['vardict','somaticsniper','strelka']
+CALLERS = ['strelka','vardict','somaticsniper']
 
 # For now threads, will scale to cores
 NTHREADS = config['NTHREADS'] if config['NTHREADS'] else 64
@@ -166,6 +166,9 @@ rule call_mutations:
                     cmdf = cmd.format(nbam, tbam, outf)
 
                 elif(caller == 'strelka'):
+                    cmdf = cmd.format(nbam, tbam, outf)
+
+                elif(caller == 'varscan'):
                     cmdf = cmd.format(nbam, tbam, outf)
 
                 print(cmdf)
