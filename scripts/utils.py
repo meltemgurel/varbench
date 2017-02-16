@@ -40,12 +40,14 @@ def get_name(x):
 def get_caller_cmd(caller, ref, muts, outdir):
     if caller == 'vardict':
         return cmd_vardict(ref, muts, outdir)
-    elif caller == 'mutect':
-        return cmd_mutect(ref, muts, outdir)
     elif caller == 'somaticsniper':
         return cmd_somaticsniper(ref)
     elif caller == 'strelka':
         return cmd_strelka(ref, outdir)
+    elif caller == 'varscan':
+        return cmd_varscan(ref, outdir)
+    elif caller == 'mutect':
+        return cmd_mutect(ref, muts, outdir)
 
 # Returns the execution command for Vardict
 def cmd_vardict(ref, muts, outdir):
@@ -57,6 +59,28 @@ def cmd_vardict(ref, muts, outdir):
     return 'vardict-java -G '+ref+' -f 0.001 -N "{}" -b "{}|{}" ' \
            '-c 1 -S 2 -E 3 '+join(outdir, "regs.vardict.bed")+' | scripts/testsomatic.R | scripts/var2vcf_paired.pl ' \
            '-N "{}|{}" -f 0.001 > {}'
+
+# Returns the execution command for Somatic Sniper
+def cmd_somaticsniper(ref):
+    return "bam-somaticsniper -F vcf -f "+ref+" {} {} {}"
+
+# Returns the execution command for Strelka
+def cmd_strelka(ref, outdir):
+    outdir = join(outdir, "strelka")
+    return 'configureStrelkaWorkflow.pl --ref '+ref+ \
+           ' --config config/config.eland.ini ' \
+           '--normal {} --tumor {} --out '+outdir+ \
+           '; make -j 8 -C '+outdir+'; mv '+join(outdir, "results/passed.somatic.snvs.vcf")+ ' {}; ' \
+           'rm -r '+outdir
+
+# Returns the execution command for Varscan
+def cmd_varscan(ref, outdir):
+    outdir = join(outdir, "varscan")
+    return 'mkdir '+outdir+'; varscan somatic <(samtools mpileup -d 10000 -f '+ref+' {}) ' \
+           '<(samtools mpileup -d 10000 -f '+ref+' {}) ' +join(outdir, "op")+ \
+           ' --min-var-freq 0.001; varscan processSomatic '+join(outdir, "op.snp")+ \
+           '; mv '+join(outdir, "op.snp.Somatic")+ ' {}; ' \
+           'rm -r '+outdir
 
 # Returns the execution command for Mutect
 def cmd_mutect(ref, muts, outdir):
@@ -71,17 +95,3 @@ def cmd_mutect(ref, muts, outdir):
            '--cosmic mutect/b37_cosmic_v54_120711.vcf --dbsnp mutect/dbsnp_132_b37.leftAligned.vcf.gz ' \
            '--intervals '+join(outdir, "regs.mutect.txt")+ \
            '--input_file:normal {} --input_file:tumor {} --out {}'
-
-# Returns the execution command for Somatic Sniper
-def cmd_somaticsniper(ref):
-    return "bam-somaticsniper -F vcf -f "+ref+" {} {} {}"
-
-# Returns the execution command for Strelka
-def cmd_strelka(ref, outdir):
-    os.system('')
-    outdir = join(outdir, "strelka")
-    return 'configureStrelkaWorkflow.pl --ref '+ref+ \
-           ' --config config/config.eland.ini ' \
-           '--normal {} --tumor {} --out '+outdir+ \
-           '; make -j 8 -C '+outdir+'; mv '+join(outdir, "results/passed.somatic.snvs.vcf")+ ' {}; ' \
-           'rm -r '+outdir

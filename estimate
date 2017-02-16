@@ -168,13 +168,16 @@ rule call_mutations:
                 nametumour = "tumour_"+str(i)
                 cmdf = cmd.format(nametumour, tbam, nbam, nametumour, namenormal, outf)
 
-            elif(CALLER == 'mutect'):
-                cmdf = cmd.format(nbam, tbam, outf)
-
             elif(CALLER == 'somaticsniper'):
                 cmdf = cmd.format(tbam, nbam, outf)
 
             elif(CALLER == 'strelka'):
+                cmdf = cmd.format(nbam, tbam, outf)
+
+            elif(CALLER == 'varscan'):
+                cmdf = cmd.format(nbam, tbam, outf)
+
+            elif(CALLER == 'mutect'):
                 cmdf = cmd.format(nbam, tbam, outf)
 
             print(cmdf)

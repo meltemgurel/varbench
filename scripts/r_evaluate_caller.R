@@ -117,7 +117,7 @@ qmsumm <- rbind(summ.mean, summ.sd)
 colnames(qmsumm) <- c('precision', 'recall', 'F-score', 'Rsq')
 cat("\n----------------------------------------------------------------------\n\n",
     file = args[11], append = TRUE)
-cat(paste("Called with ", caller, "\n\n"), file=args[5], append = TRUE)
+cat(paste("Called with ", caller, "\n\n"), file=args[11], append = TRUE)
 write.table(qmsumm, file = args[11], quote = FALSE, sep = '\t',
             row.names = TRUE, col.names = TRUE, dec = '.', append = TRUE)
 cat("\n--------------------------------------------------------------------\n\n",

@@ -52,6 +52,16 @@ process_vcf_Strelka <- function(clist)
   return(clist)
 }
 
+# Processes vcf files generated with Varscan:
+# Calculates allele frequency
+process_vcf_Varscan <- function(clist)
+{
+  clist <- clist[-1,c(1:4,11)]
+  colnames(clist) <- c('CHR', 'POS', 'REF', 'ALT', 'VAF')
+  clist$VAF <- as.numeric(gsub('%','', clist$VAF))/100
+  return(clist)  
+}
+
 # Processes vcf files generated with Mutect:
 # Keeps only somatic mutations and calculates allele frequency
 process_vcf_Mutect <- function(clist)
@@ -72,13 +82,17 @@ attach_af_to_dataframe <- function(vcf, caller)
   {
     clist <- process_vcf_SomaticSniper(clist)
   }
-  else if(caller == 'mutect')
-  {
-    clist <- process_vcf_Mutect(clist)
-  }
   else if(caller == 'strelka')
   {
     clist <- process_vcf_Strelka(clist)
+  }
+  else if(caller == 'varscan')
+  {
+    clist <- process_vcf_Varscan(clist)
+  }
+  else if(caller == 'mutect')
+  {
+    clist <- process_vcf_Mutect(clist)
   }
   return(clist[,c('CHR', 'POS', 'REF', 'ALT', 'VAF')])
 }
