@@ -58,7 +58,7 @@ run `simulate` with
 snakemake --snakefile simulate --configfile config.simulate.yml
 ```
 ### compare: Pick the best variant caller
-To run `compare` you will need to install VarDict and SomaticSniper. These are already included in the conda environment. If, instead, you manually installed the dependencies please make sure to install these variant callers before you run `compare`. More variant callers will soon be integrated into **Varbench**.
+To run `compare` you will need to install VarDict, SomaticSniper, Strelka, and Varscan. These are already included in the conda environment. If, instead, you manually installed the dependencies please make sure to install these variant callers before you run `compare`. More variant callers will keep on being integrated.
 
 ```config.compare.yml``` needs to be edited before running the pipeline. Here the ```NORMAL``` and ```TUMOR``` samples are the .bam files created with the ```simulate``` pipeline, and the ```MUTATIONS``` parameter refers to the list of mutations generated again with the same pipeline.
 You also need to submit the
