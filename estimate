@@ -110,7 +110,7 @@ rule sidx_normals:
         join(OUT_DIR, "benchmarks/estimate-sidx_normals.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
-        "do samtools sort -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
+        "do samtools sort -@ 6 -O bam {input.normal}.temp.$i.bam > {input.normal}.$i.bam; samtools index {input.normal}.$i.bam; done; "
         "touch {output}"
 
 # Sort and index tumours
@@ -124,7 +124,7 @@ rule sidx_tumours:
         join(OUT_DIR, "benchmarks/estimate-sidx_tumours.txt")
     shell:
         "for i in {{1.."+str(K)+"}}; "
-        "do samtools sort -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
+        "do samtools sort -@ 6 -O bam {input.tumour}.temp.$i.bam > {input.tumour}.$i.bam; samtools index {input.tumour}.$i.bam; done; "
         "touch {output}"
 
 #------------------------------------------------------------------------------
